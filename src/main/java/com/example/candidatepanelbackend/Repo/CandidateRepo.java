@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.example.candidatepanelbackend.Model.Candidate;
 
 @Repository
-public interface CandidateRepo extends JpaRepository<Candidate,Integer>{
+public interface CandidateRepo extends JpaRepository<Candidate,Long>{
 
 
 	
