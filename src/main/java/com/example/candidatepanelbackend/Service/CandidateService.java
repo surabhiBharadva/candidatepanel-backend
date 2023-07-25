@@ -13,6 +13,7 @@ import com.example.candidatepanelbackend.Enum.PositionEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
+import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Repo.CandidateRepo;
 
 import lombok.AllArgsConstructor;
@@ -46,7 +47,7 @@ public class CandidateService {
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
 			if (l.getId() != null) {
-				DocumentDetails documentDetails = documentService.getFile(l.getId().intValue());
+				DocumentDetilsModel documentDetails = documentService.getFile(l.getId().intValue());
 				candidate.setDocumentDetails(documentDetails);
 			}
 
@@ -57,6 +58,7 @@ public class CandidateService {
 			candidate.setPhone(l.getPhone());
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
+			candidate.setPosition(l.getPosition());
 			getList.add(candidate);
 		}
 
@@ -73,6 +75,7 @@ public class CandidateService {
 		candidateSet.setPhone(candidate.getPhone());
 		candidateSet.setComment(candidate.getComment());
 		candidateSet.setjDate(candidate.getjDate());
+		candidateSet.setPosition(candidate.getPosition());
         final Candidate updatedEmployee = candidateRepo.save(candidateSet);
 		return updatedEmployee;
 	}

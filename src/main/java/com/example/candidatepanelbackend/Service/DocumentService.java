@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.candidatepanelbackend.Model.DocumentDetails;
+import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 
 import jakarta.servlet.http.Part;
 
@@ -19,7 +20,7 @@ public interface DocumentService {
 	
 	Object saveFile(MultipartFile file);
 	
-	DocumentDetails getFile(Integer candidateId);
+	DocumentDetilsModel getFile(Integer candidateId);
 
 	Map<String, String> saveDocument(Part part, InputStream inputStream, String contentType, Integer contentLength);
 

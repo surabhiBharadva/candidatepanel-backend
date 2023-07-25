@@ -3,8 +3,8 @@ package com.example.candidatepanelbackend.Model;
 import java.sql.Date;
 
 import com.example.candidatepanelbackend.Enum.PositionEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,14 +12,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Generated;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Entity
@@ -33,8 +28,9 @@ public class Candidate {
 	private String lname;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(length = 20)
+	@Basic(optional = false)
 	private PositionEnum position;
+	
 	private String email;
 	private Integer phone;
 	private String skills;
@@ -110,6 +106,8 @@ public class Candidate {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
+	
+	@Column(name = "position", unique = true)
 	public PositionEnum getPosition() {
 		return position;
 	}

@@ -20,7 +20,7 @@ public class CandidateModel {
 
 	private Date jDate;
 	private String comment;
-	private DocumentDetails documentDetails;
+	private DocumentDetilsModel documentDetails;
 	
 	public Long getId() {
 		return id;
@@ -76,10 +76,10 @@ public class CandidateModel {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public DocumentDetails getDocumentDetails() {
+	public DocumentDetilsModel getDocumentDetails() {
 		return documentDetails;
 	}
-	public void setDocumentDetails(DocumentDetails documentDetails) {
+	public void setDocumentDetails(DocumentDetilsModel documentDetails) {
 		this.documentDetails = documentDetails;
 	}
 	

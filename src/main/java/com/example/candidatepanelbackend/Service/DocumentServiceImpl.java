@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
+import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.DocumentStorageProperty;
 import com.example.candidatepanelbackend.Repo.DocumentRepository;
 
@@ -187,15 +188,19 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 	}
 	
 	
-	public DocumentDetails getFile(Integer candidateId) {
+	public DocumentDetilsModel getFile(Integer candidateId) {
 		
 		
 		DocumentDetails documents = repository.findByIdFile(candidateId);
-		DocumentDetails documentModel = new DocumentDetails();
+		DocumentDetilsModel documentModel = new DocumentDetilsModel();
 
 		if (documents != null) {
-			
+			documentModel.setId(documents.getId());
+			documentModel.setHash(documents.getHash());
 			documentModel.setName(documents.getName());
+			documentModel.setSize(documents.getSize());
+			documentModel.setStatus(documents.getStatus());
+			documentModel.setType(documents.getType());
 			documentModel.setFileData(documents.getFileData());
 		}
 		return documentModel;
