@@ -80,8 +80,8 @@ public class CandidateService {
 		return updatedEmployee;
 	}
 
-	public Optional<Candidate> getByIdCandidate(Long id) {
-		Optional<Candidate> candidate = candidateRepo.findById(id);
+	public Candidate getByIdCandidate(Long id) {
+		Candidate candidate = candidateRepo.findById(id).get();
 		return candidate;
 	}
 

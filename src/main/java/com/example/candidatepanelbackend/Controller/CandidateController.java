@@ -1,6 +1,7 @@
 package com.example.candidatepanelbackend.Controller;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +56,8 @@ public class CandidateController {
 	}
 	
 	@GetMapping("/candidate/{id}")
-	private ResponseEntity<Optional<Candidate>> getByIdCandidate(@PathVariable Long id){
-		Optional<Candidate> candidateSave = candidateService.getByIdCandidate(id);
+	private ResponseEntity<Candidate> getByIdCandidate(@PathVariable Long id){
+		Candidate candidateSave = candidateService.getByIdCandidate(id);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
 	}
 	
