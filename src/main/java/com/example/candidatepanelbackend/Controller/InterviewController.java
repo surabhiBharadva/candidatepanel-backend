@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ public class InterviewController {
 	private ResponseEntity<Interview> addInterview(@PathVariable Long candidateId,@RequestBody Interview interview){
 		Candidate candidate =	candidateService.getByIdCandidate(candidateId);
 		interview.setCandidate(candidate);
+		
 		Interview interview2 =  interviewService.addInterview(interview);
 		return new ResponseEntity<>(interview2, HttpStatus.CREATED);
 	}
@@ -44,6 +46,13 @@ public class InterviewController {
 		
 		List<InterviewModel> interview = interviewService.getInterview();
 		return new ResponseEntity<>(interview, HttpStatus.OK);
+	}
+	
+	@PutMapping("/interview/{id}")
+	private ResponseEntity<Interview> updateInterview(@PathVariable Integer id,@RequestBody Interview interview){
+		
+		Interview interview2 =  interviewService.updateInterview(id,interview);
+		return new ResponseEntity<>(interview2, HttpStatus.CREATED);
 	}
 	
 	

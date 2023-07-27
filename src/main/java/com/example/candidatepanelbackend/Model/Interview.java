@@ -1,6 +1,5 @@
 package com.example.candidatepanelbackend.Model;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 import com.example.candidatepanelbackend.Enum.StatusEnum;
@@ -11,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +37,18 @@ public class Interview {
 	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
+	
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 	public Candidate getCandidate() {
 		return candidate;
 	}

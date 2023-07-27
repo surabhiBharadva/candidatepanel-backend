@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,14 +36,12 @@ public class EmployeeController{
 	ObjectMapper mapper;
 	
 	@PostMapping("/employee")
-	private ResponseEntity<Employee> saveCandidate(@RequestParam("employee") String employee,@RequestParam("file") List<MultipartFile> file) throws JsonMappingException, JsonProcessingException {
-		Employee employeeObj = mapper.readValue(employee, Employee.class);
-		Employee employeeData =  null;
+	private ResponseEntity<Employee> saveCandidate(@RequestBody Employee employee) throws JsonMappingException, JsonProcessingException {
+	
+		Employee employeeData =  empoService.addEmployee(employee, null);
 		 
 		return new ResponseEntity<>(employeeData, HttpStatus.CREATED);
 	}
-	
-	
 	
 	@GetMapping("/employee")
 	private ResponseEntity<List<Employee>> getEmplyeeName(){
@@ -50,5 +50,16 @@ public class EmployeeController{
 		return new ResponseEntity<>(list, HttpStatus.CREATED);
 	}
 	
+	@GetMapping("/employee/{id}")
+	private ResponseEntity<Employee> getByIdEmployee(@PathVariable Long id){
+		Employee employeeObj = empoService.getByIdEmployee(id);
+		return new ResponseEntity<>(employeeObj, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/employee/{id}")
+	private ResponseEntity<Employee> updateCandidate(@PathVariable Long id,@RequestBody Employee employee){
+		Employee employeeUpdate = empoService.updateCandidate(id ,employee);
+		return new ResponseEntity<>(employeeUpdate, HttpStatus.CREATED);
+	}
 	
 }

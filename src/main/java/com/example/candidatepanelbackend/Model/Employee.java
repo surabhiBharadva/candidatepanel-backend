@@ -2,6 +2,7 @@ package com.example.candidatepanelbackend.Model;
 
 import java.sql.Date;
 
+import com.example.candidatepanelbackend.Enum.EmployeeStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +34,17 @@ public class Employee {
 	private String adadharcard;
 	private String pancard;
 	private String marksheet;
+	private EmployeeStatus status;
 	
 	
+
+	public EmployeeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EmployeeStatus status) {
+		this.status = status;
+	}
 
 	public String getAdadharcard() {
 		return adadharcard;

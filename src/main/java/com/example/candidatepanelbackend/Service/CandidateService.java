@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.candidatepanelbackend.Enum.CandidateStatus;
 import com.example.candidatepanelbackend.Enum.PositionEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
@@ -59,6 +60,7 @@ public class CandidateService {
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
 			candidate.setPosition(l.getPosition());
+			candidate.setStatus(l.getStatus());
 			getList.add(candidate);
 		}
 
@@ -76,8 +78,11 @@ public class CandidateService {
 		candidateSet.setComment(candidate.getComment());
 		candidateSet.setjDate(candidate.getjDate());
 		candidateSet.setPosition(candidate.getPosition());
-        final Candidate updatedEmployee = candidateRepo.save(candidateSet);
-		return updatedEmployee;
+		candidateSet.setFileUpload(candidate.getFileUpload());
+		candidateSet.setStatus(candidate.getStatus());
+		candidateSet.setSkills(candidate.getSkills());
+        final Candidate candidateUpdate = candidateRepo.save(candidateSet);
+		return candidateUpdate;
 	}
 
 	public Candidate getByIdCandidate(Long id) {

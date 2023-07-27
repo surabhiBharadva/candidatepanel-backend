@@ -2,7 +2,7 @@ package com.example.candidatepanelbackend.Model;
 
 import java.sql.Date;
 
-
+import com.example.candidatepanelbackend.Enum.CandidateStatus;
 import com.example.candidatepanelbackend.Enum.PositionEnum;
 
 import jakarta.persistence.Basic;
@@ -36,7 +36,7 @@ public class Candidate {
 	private Integer phone;
 	private String skills;
 	private String fileUpload;
-	
+	private CandidateStatus status; 
 	
 	
 	private Date jDate;
@@ -114,6 +114,12 @@ public class Candidate {
 	}
 	public void setPosition(PositionEnum position) {
 		this.position = position;
+	}
+	public CandidateStatus getStatus() {
+		return status;
+	}
+	public void setStatus(CandidateStatus status) {
+		this.status = status;
 	}
 	
 	

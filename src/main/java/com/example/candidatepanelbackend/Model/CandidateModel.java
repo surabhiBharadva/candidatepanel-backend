@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.example.candidatepanelbackend.Enum.CandidateStatus;
 import com.example.candidatepanelbackend.Enum.PositionEnum;
 
 @Component
@@ -21,7 +22,14 @@ public class CandidateModel {
 	private Date jDate;
 	private String comment;
 	private DocumentDetilsModel documentDetails;
+	private CandidateStatus status;
 	
+	public CandidateStatus getStatus() {
+		return status;
+	}
+	public void setStatus(CandidateStatus status) {
+		this.status = status;
+	}
 	public Long getId() {
 		return id;
 	}
