@@ -3,6 +3,7 @@ package com.example.candidatepanelbackend.Model;
 import java.time.LocalDateTime;
 
 import com.example.candidatepanelbackend.Enum.StatusEnum;
+import com.example.candidatepanelbackend.Model.Candidate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

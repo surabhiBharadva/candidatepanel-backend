@@ -1,6 +1,8 @@
 package com.example.candidatepanelbackend.Service;
 
 import java.util.ArrayList;
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Repo.InterviewRepo;
+
+
 
 @Service
 public class InterviewService {
@@ -34,8 +38,7 @@ public class InterviewService {
 			if(interview.getCandidate() != null && interview.getCandidate().getId() != null) {
 			Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
 			CandidateModel candidateModel = new CandidateModel(); 
-			candidateModel.setFirstName(candidate.getFirstName());
-			candidateModel.setLname(candidate.getLname());
+			candidateModel.setCandidateName(candidate.getCandidateName());
 			candidateModel.setPosition(candidate.getPosition());
 			interviewModel.setCandidate(candidateModel);
 		}

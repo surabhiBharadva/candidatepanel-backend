@@ -1,34 +1,47 @@
 package com.example.candidatepanelbackend.Model;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
 import com.example.candidatepanelbackend.Enum.CandidateStatus;
 import com.example.candidatepanelbackend.Enum.PositionEnum;
+import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 
 @Component
 public class CandidateModel {
 	
 	private Long id;
-	private String firstName;
-	private String lname;
+	private String candidateName;
 	
 	private PositionEnum position;
 	private String email;
-	private Integer phone;
+	private Long phone;
 	private String skills;
 
 	private Date jDate;
 	private String comment;
 	private DocumentDetilsModel documentDetails;
-	private CandidateStatus status;
+	private CandidateStatus candidateStatus;
 	
-	public CandidateStatus getStatus() {
-		return status;
+	private CandidateAvailabilityEnum candidateAvailability;
+	
+	private Date candidateDate;
+	private StatusActionEnum  status;
+	
+	
+	public String getCandidateName() {
+		return candidateName;
 	}
-	public void setStatus(CandidateStatus status) {
-		this.status = status;
+	public void setCandidateName(String candidateName) {
+		this.candidateName = candidateName;
+	}
+	public CandidateStatus getCandidateStatus() {
+		return candidateStatus;
+	}
+	public void setCandidateStatus(CandidateStatus candidateStatus) {
+		this.candidateStatus = candidateStatus;
 	}
 	public Long getId() {
 		return id;
@@ -36,18 +49,7 @@ public class CandidateModel {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLname() {
-		return lname;
-	}
-	public void setLname(String lname) {
-		this.lname = lname;
-	}
+	
 	public PositionEnum getPosition() {
 		return position;
 	}
@@ -60,10 +62,10 @@ public class CandidateModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Integer getPhone() {
+	public Long getPhone() {
 		return phone;
 	}
-	public void setPhone(Integer phone) {
+	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
 	public String getSkills() {
@@ -89,6 +91,24 @@ public class CandidateModel {
 	}
 	public void setDocumentDetails(DocumentDetilsModel documentDetails) {
 		this.documentDetails = documentDetails;
+	}
+	public Date getCandidateDate() {
+		return candidateDate;
+	}
+	public void setCandidateDate(Date candidateDate) {
+		this.candidateDate = candidateDate;
+	}
+	public CandidateAvailabilityEnum getCandidateAvailability() {
+		return candidateAvailability;
+	}
+	public void setCandidateAvailability(CandidateAvailabilityEnum candidateAvailability) {
+		this.candidateAvailability = candidateAvailability;
+	}
+	public StatusActionEnum isStatus() {
+		return status;
+	}
+	public void setStatus(StatusActionEnum inanctive) {
+		this.status = inanctive;
 	}
 	
 	

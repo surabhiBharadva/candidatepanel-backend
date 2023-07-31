@@ -2,6 +2,8 @@ package com.example.candidatepanelbackend.Service;
 
 import java.io.IOException;
 
+
+
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,11 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.DocumentStorageProperty;
 import com.example.candidatepanelbackend.Repo.DocumentRepository;
+
 
 import jakarta.servlet.http.Part;
 

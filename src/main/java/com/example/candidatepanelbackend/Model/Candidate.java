@@ -1,9 +1,12 @@
 package com.example.candidatepanelbackend.Model;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import com.example.candidatepanelbackend.Enum.CandidateStatus;
 import com.example.candidatepanelbackend.Enum.PositionEnum;
+import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -21,27 +24,36 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Candidate {
+public class Candidate  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String firstName;
-	private String lname;
+	
+	private String candidateName;
 	
 	@Enumerated(EnumType.STRING)
 	@Basic(optional = false)
 	private PositionEnum position;
 	
 	private String email;
-	private Integer phone;
+	private Long phone;
 	private String skills;
 	private String fileUpload;
-	private CandidateStatus status; 
-	
+	private CandidateStatus candidateStatus; 
 	
 	private Date jDate;
 	private String comment;
 	
+	@Enumerated(EnumType.STRING)
+	private StatusActionEnum status;
+	
+	@Enumerated(EnumType.STRING)
+	private CandidateAvailabilityEnum candidateAvailability;
+	
+	private Date createDate;
+	private Date modifiedDate;
+	
+	private Date candidateDate;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,35 +64,23 @@ public class Candidate {
 		this.id = id;
 	}
 	
-	@Column(name ="first_Name")
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	@Column(name ="lName")
-	public String getLname() {
-		return lname;
-	}
-	public void setLname(String lname) {
-		this.lname = lname;
-	}
+	@Column(nullable = false , unique = false)
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Integer getPhone() {
+	
+	@Column(nullable = false, unique = false)
+	public Long getPhone() {
 		return phone;
 	}
-	public void setPhone(Integer phone) {
+	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
-	
-	@Column(name ="file_upload")
+
+	@Column(nullable = false)
 	public String getFileUpload() {
 		return fileUpload;
 	}
@@ -88,7 +88,7 @@ public class Candidate {
 		this.fileUpload = fileUpload;
 	}
 	
-	@Column(name ="j_Date")
+	
 	public Date getjDate() {
 		return jDate;
 	}
@@ -101,6 +101,8 @@ public class Candidate {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
+	@Column(nullable = false)
 	public String getSkills() {
 		return skills;
 	}
@@ -108,24 +110,66 @@ public class Candidate {
 		this.skills = skills;
 	}
 	
-	@Column(name = "position", unique = true)
+	@Column(nullable = false)
 	public PositionEnum getPosition() {
 		return position;
 	}
 	public void setPosition(PositionEnum position) {
 		this.position = position;
 	}
-	public CandidateStatus getStatus() {
+	
+	@Column(nullable = false)
+	public String getCandidateName() {
+		return candidateName;
+	}
+	public void setCandidateName(String candidateName) {
+		this.candidateName = candidateName;
+	}
+	
+	
+	public CandidateStatus getCandidateStatus() {
+		return candidateStatus;
+	}
+	public void setCandidateStatus(CandidateStatus candidateStatus) {
+		this.candidateStatus = candidateStatus;
+	}
+	
+	public StatusActionEnum isStatus() {
 		return status;
 	}
-	public void setStatus(CandidateStatus status) {
+	public void setStatus(StatusActionEnum status) {
 		this.status = status;
 	}
 	
 	
+	public Date getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 	
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 	
+	public Date getCandidateDate() {
+		return candidateDate;
+	}
+	public void setCandidateDate(Date candidateDate) {
+		this.candidateDate = candidateDate;
+	}
 	
+	@Column(nullable = false)
+	public CandidateAvailabilityEnum getCandidateAvailability() {
+		return candidateAvailability;
+	}
+	public void setCandidateAvailability(CandidateAvailabilityEnum candidateAvailability) {
+		this.candidateAvailability = candidateAvailability;
+	}
 	
 	
 	
