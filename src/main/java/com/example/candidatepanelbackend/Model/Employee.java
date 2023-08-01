@@ -1,6 +1,8 @@
 package com.example.candidatepanelbackend.Model;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import com.example.candidatepanelbackend.Enum.EmployeeStatus;
 
@@ -25,7 +27,7 @@ public class Employee {
 	private String firstName;
 	private String lname;
 	private String email;
-	private Integer phone;	
+	private Long phone;	
 	private Date jDate;
 	private String country;
 	private String state;
@@ -129,10 +131,10 @@ public class Employee {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Integer getPhone() {
+	public Long getPhone() {
 		return phone;
 	}
-	public void setPhone(Integer phone) {
+	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
 	public Date getjDate() {

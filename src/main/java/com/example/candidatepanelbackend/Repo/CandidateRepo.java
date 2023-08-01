@@ -12,7 +12,7 @@ import com.example.candidatepanelbackend.Model.Candidate;
 @Repository
 public interface CandidateRepo extends JpaRepository<Candidate,Long>{
 
-	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE position = 0 or position=1 or position=2 or position=5 order by candidate_date DESC")
+	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus = 0 or candidateStatus=1 or candidateStatus=2 or candidateStatus=4 order by candidateDate DESC")
 	List<Candidate> findCandidate();
 
 

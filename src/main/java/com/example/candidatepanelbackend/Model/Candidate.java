@@ -1,7 +1,6 @@
 package com.example.candidatepanelbackend.Model;
 
 
-
 import java.util.Date;
 
 import com.example.candidatepanelbackend.Enum.CandidateStatus;
@@ -29,12 +28,14 @@ public class Candidate  {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	
 	private String candidateName;
 	
 	@Enumerated(EnumType.STRING)
 	@Basic(optional = false)
 	private PositionEnum position;
 	
+	private Date candidateDate;
 	private String email;
 	private Long phone;
 	private String skills;
@@ -44,8 +45,6 @@ public class Candidate  {
 	private Date jDate;
 	private String comment;
 	
-	@Enumerated(EnumType.STRING)
-	private StatusActionEnum status;
 	
 	@Enumerated(EnumType.STRING)
 	private CandidateAvailabilityEnum candidateAvailability;
@@ -53,7 +52,8 @@ public class Candidate  {
 	private Date createDate;
 	private Date modifiedDate;
 	
-	private Date candidateDate;
+	private String deleteFlag;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -134,14 +134,6 @@ public class Candidate  {
 		this.candidateStatus = candidateStatus;
 	}
 	
-	public StatusActionEnum isStatus() {
-		return status;
-	}
-	public void setStatus(StatusActionEnum status) {
-		this.status = status;
-	}
-	
-	
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -169,6 +161,12 @@ public class Candidate  {
 	}
 	public void setCandidateAvailability(CandidateAvailabilityEnum candidateAvailability) {
 		this.candidateAvailability = candidateAvailability;
+	}
+	public String getDeleteFlag() {
+		return deleteFlag;
+	}
+	public void setDeleteFlag(String deleteFlag) {
+		this.deleteFlag = deleteFlag;
 	}
 	
 	

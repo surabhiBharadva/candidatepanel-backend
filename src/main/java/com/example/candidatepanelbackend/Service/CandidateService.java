@@ -1,10 +1,13 @@
 package com.example.candidatepanelbackend.Service;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +16,9 @@ import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
+import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Repo.CandidateRepo;
-
+import com.example.candidatepanelbackend.utils.ValidationsUtilsString;
 
 import lombok.AllArgsConstructor;
 
@@ -27,8 +31,21 @@ public class CandidateService {
 	
 	@Autowired 
 	private DocumentService documentService;
+	
+	@Autowired 
+	private EmployeeService employeeService;
+	
+	@Autowired
+	private ValidationsUtilsString validationUtils;
+	
+	@Autowired 
+	private ResponseService responseService;
+	
+	
 
-	public Candidate saveCandidate(Candidate candidate, MultipartFile file) {
+	public ResponseEntity<Object> saveCandidate(Candidate candidate, MultipartFile file) {
+		
+		String error  = validateCheck(candidate);
 		
 		if(candidate.getPosition() != null) {
 		candidate.setPosition(candidate.getPosition());
@@ -40,12 +57,41 @@ public class CandidateService {
 		if(file != null) {
 			documentService.saveDocument(file,candidateObject.getId().intValue());
 		}
-		return candidateObject;
+		if(!error.isEmpty()) {
+			 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData(error));
+		}
+		 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Candidate Update succsscefully", candidateObject));
+	}
+
+	private String validateCheck(Candidate candidate) {
+		String error = "";
+		Boolean value2 = validationUtils.checkVeladationString(candidate.getCandidateName());
+		if(value2){
+			error += "Candidate Name is missing," + " ";
+		}
+		if(validationUtils.checkVeladationString(candidate.getSkills())) {
+			error += "Candidate Skills is missing," + " ";
+		}
+
+		if(validationUtils.checkVeladationLong(candidate.getPhone())) {
+			error += "Candidate Phone Number is missing," + " ";
+		}
+		Boolean value = validationUtils.checkVeladationString(candidate.getEmail());
+		if(value) {
+			error += "Candidate Email is missing," + " ";
+		}
+		
+		if(validationUtils.checkVeladationString(candidate.getFileUpload())) {
+			error += "Candidate File Upload is missing," + " ";
+		}
+		
+		
+		return error;
 	}
 
 	public List<CandidateModel> getCandidate() {
-		List<Candidate> list = candidateRepo.findAll();
-		//List<Candidate> list = candidateRepo.findCandidate();
+		//List<Candidate> list = candidateRepo.findAll();
+		List<Candidate> list = candidateRepo.findCandidate();
 		List<CandidateModel> getList = new ArrayList<CandidateModel>();
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
@@ -72,7 +118,12 @@ public class CandidateService {
 		
 	}
 
-	public Candidate updateCandidate(Long id, Candidate candidate) {
+	public ResponseEntity<Object> updateCandidate(Long id, Candidate candidate) {
+		String error = validateCheck(candidate);
+		if(!error.isEmpty()) {
+			 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData(error));
+		}
+		
 		Candidate candidateSet = candidateRepo.findById(id).get();
 		
 		candidateSet.setEmail(candidate.getEmail());
@@ -83,14 +134,22 @@ public class CandidateService {
 		candidateSet.setPosition(candidate.getPosition());
 		candidateSet.setFileUpload(candidate.getFileUpload());
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
-		if(candidateSet.getCandidateStatus().equals(CandidateStatus.offerRejected) || (candidateSet.getCandidateStatus().equals(CandidateStatus.InterviewRejected))) {
-			candidateSet.setStatus(StatusActionEnum.InAnctive);
+		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OFFERREJECTED) || (candidateSet.getCandidateStatus().equals(CandidateStatus.INTERVIEWREJECTED))) {
+			candidateSet.setDeleteFlag("Y");
+		}
+		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OFFERACCEPTED)) {
+			Employee employee = new Employee();
+			employee.setFirstName(candidate.getCandidateName());
+			employee.setjDate(candidate.getjDate());
+			employee.setPhone(candidate.getPhone());
+			employee.setEmail(candidate.getEmail());
+			employeeService.addEmployee(employee, null);
 		}
 		candidateSet.setSkills(candidate.getSkills());
 		candidateSet.setModifiedDate(new Date());
 		candidateSet.setCandidateAvailability(candidate.getCandidateAvailability());
         final Candidate candidateUpdate = candidateRepo.save(candidateSet);
-		return candidateUpdate;
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Candidate Update succsscefully", candidateUpdate));
 	}
 
 	public Candidate getByIdCandidate(Long id) {
