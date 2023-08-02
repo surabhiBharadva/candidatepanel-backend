@@ -9,14 +9,14 @@ import com.example.candidatepanelbackend.Enum.StatusEnum;
 @Component
 public class InterviewModel {
 
-	private Integer id;
+	private Long id;
 	
 	private LocalDateTime schduleDateTime;
 	
 	private String employeeName;
 	
 	private StatusEnum status;
-
+	
 	public StatusEnum getStatus() {
 		return status;
 	}
@@ -36,10 +36,10 @@ public class InterviewModel {
 	}
 
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

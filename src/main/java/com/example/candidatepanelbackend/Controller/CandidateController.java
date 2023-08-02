@@ -2,6 +2,7 @@ package com.example.candidatepanelbackend.Controller;
 
 import java.sql.SQLDataException;
 
+
 import java.util.List;
 
 import java.util.Optional;
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.candidatepanelbackend.Service.ResponseService;
 
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/")
@@ -51,8 +53,8 @@ public class CandidateController {
 		try {
 			return candidateService.saveCandidate(candidateObject, file);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-					.body(responseService.RespnseData("Candidate Alredy exits"));
+			return ResponseEntity.status(HttpStatus.ACCEPTED)
+					.body(responseService.RespnseData("Candidate Alredy exits",com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
 		}
 	}
 
@@ -61,13 +63,20 @@ public class CandidateController {
 		List<CandidateModel> candidateList = candidateService.getCandidate();
 		return new ResponseEntity<>(candidateList, HttpStatus.OK);
 	}
+	
+	@GetMapping("/candidate/candidateList")
+	private ResponseEntity<List<CandidateModel>> getCandidatePendingInterview() {
+		List<CandidateModel> candidateList = candidateService.getCandidatePendingInterview();
+		return new ResponseEntity<>(candidateList, HttpStatus.OK);
+	}
+
 
 	@PutMapping("/candidate/{id}")
 	private ResponseEntity<Object> updateCandidate(@PathVariable Long id, @RequestBody Candidate candidate) {
 		try {
 			return candidateService.updateCandidate(id, candidate);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+			return ResponseEntity.status(HttpStatus.ACCEPTED)
 					.body(responseService.RespnseData("Candidate Alredy exits"));
 		}
 

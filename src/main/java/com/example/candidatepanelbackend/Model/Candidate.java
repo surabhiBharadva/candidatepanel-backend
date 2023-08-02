@@ -28,7 +28,6 @@ public class Candidate  {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	
 	private String candidateName;
 	
 	@Enumerated(EnumType.STRING)
@@ -42,7 +41,7 @@ public class Candidate  {
 	private String fileUpload;
 	private CandidateStatus candidateStatus; 
 	
-	private Date jDate;
+	private Date joiningDate;
 	private String comment;
 	
 	
@@ -54,7 +53,8 @@ public class Candidate  {
 	
 	private String deleteFlag;
 	
-	
+	private String createBy;
+	private String modifiedBy;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {
@@ -88,13 +88,7 @@ public class Candidate  {
 		this.fileUpload = fileUpload;
 	}
 	
-	
-	public Date getjDate() {
-		return jDate;
-	}
-	public void setjDate(Date jDate) {
-		this.jDate = jDate;
-	}
+
 	public String getComment() {
 		return comment;
 	}
@@ -167,6 +161,24 @@ public class Candidate  {
 	}
 	public void setDeleteFlag(String deleteFlag) {
 		this.deleteFlag = deleteFlag;
+	}
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+	public String getCreateBy() {
+		return createBy;
+	}
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 	
 	

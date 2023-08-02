@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Model.Candidate;
+import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Service.CandidateService;
+import com.example.candidatepanelbackend.Service.EmployeeService;
 import com.example.candidatepanelbackend.Service.InterviewService;
+import com.example.candidatepanelbackend.Service.ResponseService;
 
 
 
@@ -36,13 +40,28 @@ public class InterviewController {
 	@Autowired 
 	private CandidateService candidateService;
 	
-	@PostMapping("/interview/{candidateId}")
-	private ResponseEntity<Interview> addInterview(@PathVariable Long candidateId,@RequestBody Interview interview){
+	@Autowired 
+	private EmployeeService employeeService;
+	
+	@Autowired
+	private ResponseService responseService;
+	
+	@PostMapping("/interview/{candidateId}/{employeeId}")
+	private ResponseEntity<Object> addInterview(@PathVariable Long candidateId,@RequestBody Interview interview,@PathVariable Long employeeId){
+		Interview interviewSet = null;
 		Candidate candidate =	candidateService.getByIdCandidate(candidateId);
 		interview.setCandidate(candidate);
-		
-		Interview interview2 =  interviewService.addInterview(interview);
-		return new ResponseEntity<>(interview2, HttpStatus.CREATED);
+		Employee employee = employeeService.getByIdEmployee(employeeId);
+		interview.setEmployeeName(employee.getFirstName());
+		interview.setEmployee(employee);
+		try {
+		interviewSet =  interviewService.addInterview(interview);
+		  candidateService.updateStatus(candidate.getId());
+		}catch(Exception e){
+			return ResponseEntity.status(HttpStatus.ACCEPTED)
+					.body(responseService.RespnseData("Interview Already Schedule",com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
+		}
+		 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Interview Schedule add Successfully", interviewSet,ResponseStatus.Success));
 	}
 	
 	@GetMapping("/interview")
@@ -53,10 +72,15 @@ public class InterviewController {
 	}
 	
 	@PutMapping("/interview/{id}")
-	private ResponseEntity<Interview> updateInterview(@PathVariable Integer id,@RequestBody Interview interview){
+	private ResponseEntity<Interview> updateInterview(@PathVariable Long id,@RequestBody Interview interview){
 		
 		Interview interview2 =  interviewService.updateInterview(id,interview);
 		return new ResponseEntity<>(interview2, HttpStatus.CREATED);
+	}
+	@GetMapping("/interview/{id}")
+	private ResponseEntity<InterviewModel> getByIdCandidate(@PathVariable Long id) {
+		InterviewModel candidateSave = interviewService.getByIdInterView(id);
+		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
 	}
 	
 	

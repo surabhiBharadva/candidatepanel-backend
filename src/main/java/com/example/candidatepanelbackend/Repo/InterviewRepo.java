@@ -9,7 +9,7 @@ import com.example.candidatepanelbackend.Model.Interview;
 
 
 @Repository
-public interface InterviewRepo extends JpaRepository<Interview,Integer> {
+public interface InterviewRepo extends JpaRepository<Interview,Long> {
 	
 	
 }

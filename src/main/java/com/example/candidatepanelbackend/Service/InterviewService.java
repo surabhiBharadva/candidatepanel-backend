@@ -53,7 +53,7 @@ public class InterviewService {
 		return interviewAdd;
 	}
 
-	public Interview updateInterview(Integer id, Interview interview) {
+	public Interview updateInterview(Long id, Interview interview) {
 		
 		Interview interviewSet = interviewRepo.findById(id).get();
 		interviewSet.setStatus(interview.getStatus());
@@ -62,6 +62,12 @@ public class InterviewService {
 		final Interview interviewUpdate = interviewRepo.save(interviewSet);
 		return interviewUpdate;
 		
+	}
+
+	public InterviewModel getByIdInterView(Long id) {
+		Interview interview = interviewRepo.findById(id).get();
+		
+		return null;
 	}
 	
 }

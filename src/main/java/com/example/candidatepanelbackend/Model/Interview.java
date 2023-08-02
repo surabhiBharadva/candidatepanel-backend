@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.example.candidatepanelbackend.Enum.StatusEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class Interview {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
 	private LocalDateTime schduleDateTime;
 	
@@ -35,11 +36,11 @@ public class Interview {
 	private String feedback;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "candidate_id")
+	@JoinColumn(name = "candidateId",unique=false)
 	private Candidate candidate;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "employee_id")
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name = "employeeId",unique=true)
 	private Employee employee;
 	
 	public Employee getEmployee() {
@@ -66,10 +67,10 @@ public class Interview {
 		this.status = status;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
