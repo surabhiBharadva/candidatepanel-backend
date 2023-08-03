@@ -20,7 +20,7 @@ public class CandidateModel {
 	private Long phone;
 	private String skills;
 
-	private Date jDate;
+	private Date joiningDate;
 	private String comment;
 	private DocumentDetilsModel documentDetails;
 	private CandidateStatus candidateStatus;
@@ -74,12 +74,7 @@ public class CandidateModel {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
-	public Date getjDate() {
-		return jDate;
-	}
-	public void setjDate(Date jDate) {
-		this.jDate = jDate;
-	}
+	
 	public String getComment() {
 		return comment;
 	}
@@ -109,6 +104,15 @@ public class CandidateModel {
 	}
 	public void setStatus(StatusActionEnum inanctive) {
 		this.status = inanctive;
+	}
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+	public StatusActionEnum getStatus() {
+		return status;
 	}
 	
 	

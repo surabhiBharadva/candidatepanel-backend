@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.Interview;
@@ -24,6 +27,9 @@ public class InterviewService {
 	
 	@Autowired
 	private CandidateService candidateService;
+	
+	@Autowired
+	private ResponseService responseService;
 
 	public Interview addInterview(Interview interview) {
 		return interviewRepo.save(interview);
@@ -31,6 +37,8 @@ public class InterviewService {
 	}
 
 	public List<InterviewModel> getInterview() {
+		
+	  
 	   List<Interview> interviewList = interviewRepo.findAll();
 	   List<InterviewModel> interviewAdd = new ArrayList<InterviewModel>();
 		for(Interview interview : interviewList) {
@@ -50,24 +58,43 @@ public class InterviewService {
 			
 			interviewAdd.add(interviewModel);
 		}
+		 List<Interview> interList = interviewRepo.findTodayInterview();
 		return interviewAdd;
 	}
 
-	public Interview updateInterview(Long id, Interview interview) {
-		
+	public ResponseEntity<Object> updateInterview(Long id, Interview interview) {
+		try {
 		Interview interviewSet = interviewRepo.findById(id).get();
 		interviewSet.setStatus(interview.getStatus());
 		interviewSet.setFeedback(interview.getFeedback());
-		interviewSet.setCandidate(interview.getCandidate());
+		
+		//interviewSet.setCandidate(interviewSet.getCandidate());
 		final Interview interviewUpdate = interviewRepo.save(interviewSet);
-		return interviewUpdate;
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService
+				.RespnseData("Interview Schedule Update Successfully", interviewUpdate, ResponseStatus.Success));
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService
+					.RespnseData("data" ,e, ResponseStatus.Error));
+		}
 		
 	}
 
 	public InterviewModel getByIdInterView(Long id) {
 		Interview interview = interviewRepo.findById(id).get();
+		Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
+		CandidateModel candidateModel = new CandidateModel();
+		InterviewModel interviewModel = new InterviewModel();
+		candidateModel.setCandidateName(candidate.getCandidateName());
 		
-		return null;
+		interviewModel.setId(interview.getId());
+		interviewModel.setStatus(interview.getStatus());
+		interviewModel.setCandidate(candidateModel);
+		return interviewModel;
 	}
+	public Interview getById(Long id) {
+		Interview interview = interviewRepo.findById(id).get();
+		return interview;
+	}
+
 	
 }

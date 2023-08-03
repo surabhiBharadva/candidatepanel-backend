@@ -49,14 +49,14 @@ public class InterviewController {
 	@PostMapping("/interview/{candidateId}/{employeeId}")
 	private ResponseEntity<Object> addInterview(@PathVariable Long candidateId,@RequestBody Interview interview,@PathVariable Long employeeId){
 		Interview interviewSet = null;
-		Candidate candidate =	candidateService.getByIdCandidate(candidateId);
+		Candidate candidate = candidateService.getByIdCandidate(candidateId);
 		interview.setCandidate(candidate);
 		Employee employee = employeeService.getByIdEmployee(employeeId);
 		interview.setEmployeeName(employee.getFirstName());
-		interview.setEmployee(employee);
+		interview.setEmployeeId(employeeId);
 		try {
 		interviewSet =  interviewService.addInterview(interview);
-		  candidateService.updateStatus(candidate.getId());
+		 candidateService.updateStatus(candidate.getId());
 		}catch(Exception e){
 			return ResponseEntity.status(HttpStatus.ACCEPTED)
 					.body(responseService.RespnseData("Interview Already Schedule",com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
@@ -72,10 +72,15 @@ public class InterviewController {
 	}
 	
 	@PutMapping("/interview/{id}")
-	private ResponseEntity<Interview> updateInterview(@PathVariable Long id,@RequestBody Interview interview){
-		
-		Interview interview2 =  interviewService.updateInterview(id,interview);
-		return new ResponseEntity<>(interview2, HttpStatus.CREATED);
+	private ResponseEntity<Object> updateInterview(@PathVariable Long id, @RequestBody Interview interview) {
+
+		try {
+			return interviewService.updateInterview(id, interview);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("data", e,
+					com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
+		}
+
 	}
 	@GetMapping("/interview/{id}")
 	private ResponseEntity<InterviewModel> getByIdCandidate(@PathVariable Long id) {

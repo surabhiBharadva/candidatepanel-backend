@@ -1,5 +1,6 @@
 package com.example.candidatepanelbackend.Model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.candidatepanelbackend.Enum.StatusEnum;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interview {
+public class Interview implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -35,20 +36,21 @@ public class Interview {
 
 	private String feedback;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "candidateId",unique=false)
 	private Candidate candidate;
 	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "employeeId",unique=true)
-	private Employee employee;
 	
-	public Employee getEmployee() {
-		return employee;
+	private Long employeeId;
+	
+	
+
+	public Long getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public Candidate getCandidate() {

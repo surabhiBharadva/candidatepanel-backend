@@ -14,17 +14,17 @@ import com.example.candidatepanelbackend.Model.Candidate;
 @Repository
 public interface CandidateRepo extends JpaRepository<Candidate,Long>{
 
-	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus=0 or candidateStatus=1 or candidateStatus=2 or candidateStatus=4 order by candidateDate ASC")
+	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus='PENDING' or candidateStatus='INTERVIEW' or candidateStatus='INTERVIEWSELECTED' or candidateStatus='OFFERACCEPTED' order by candidateDate ASC")
 	List<Candidate> findCandidate();
 	
 	
-	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus=0 order by candidateDate ASC")
+	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus='PENDING' order by candidateDate ASC")
 	List<Candidate> getCandidatePendingInterview();
 
 	@Modifying
     @Transactional 
-	@Query(nativeQuery = true, value = "UPDATE candidate SET candidateStatus=1 WHERE id =:candidateId")
-	String updateStatus(Long candidateId);
+	@Query(nativeQuery = true, value = "UPDATE candidate SET candidateStatus='INTERVIEW' WHERE id =:candidateId")
+	public void updateStatus(Long candidateId);
 	
 
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.candidatepanelbackend.Enum.CandidateStatus;
+import com.example.candidatepanelbackend.Enum.PositionEnum;
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
@@ -47,11 +48,6 @@ public class CandidateService {
 	public ResponseEntity<Object> saveCandidate(Candidate candidate, MultipartFile file) {
 		
 		String error  = validateCheck(candidate);
-		
-		if(candidate.getPosition() != null) {
-		candidate.setPosition(candidate.getPosition());
-		
-		}
 		candidate.setCreateDate(new Date());
 		candidate.setCandidateDate(new Date());
 		Candidate candidateObject = candidateRepo.save(candidate);
@@ -102,7 +98,7 @@ public class CandidateService {
 
 			candidate.setCandidateName(l.getCandidateName());
 			candidate.setComment(l.getComment());
-			candidate.setjDate(l.getJoiningDate());
+			candidate.setJoiningDate(l.getJoiningDate());
 			candidate.setPhone(l.getPhone());
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
@@ -163,13 +159,14 @@ public class CandidateService {
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
 			candidate.setCandidateName(l.getCandidateName());
+			candidate.setId(l.getId());
 			getList.add(candidate);
 		}
 		return getList;
 	}
 
 	public void updateStatus(Long id) {
-		String  candidate	= candidateRepo.updateStatus(id);
+		candidateRepo.updateStatus(id);
 		
 	}
 

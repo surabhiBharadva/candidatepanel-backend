@@ -39,6 +39,8 @@ public class Candidate  {
 	private Long phone;
 	private String skills;
 	private String fileUpload;
+	
+	@Enumerated(EnumType.STRING)
 	private CandidateStatus candidateStatus; 
 	
 	private Date joiningDate;
@@ -105,6 +107,7 @@ public class Candidate  {
 	}
 	
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	public PositionEnum getPosition() {
 		return position;
 	}
@@ -120,7 +123,7 @@ public class Candidate  {
 		this.candidateName = candidateName;
 	}
 	
-	
+	@Enumerated(EnumType.STRING)
 	public CandidateStatus getCandidateStatus() {
 		return candidateStatus;
 	}
@@ -150,6 +153,7 @@ public class Candidate  {
 	}
 	
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	public CandidateAvailabilityEnum getCandidateAvailability() {
 		return candidateAvailability;
 	}
