@@ -28,27 +28,27 @@ public class Candidate  {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	private String candidateName;
+	private String firstName;
+	private String lastName;
 	
-	@Enumerated(EnumType.STRING)
-	@Basic(optional = false)
-	private PositionEnum position;
+	
+	private String position;
 	
 	private Date candidateDate;
 	private String email;
 	private Long phone;
 	private String skills;
-	private String fileUpload;
+	private String resume;
 	
-	@Enumerated(EnumType.STRING)
-	private CandidateStatus candidateStatus; 
+	
+	private String candidateStatus; 
 	
 	private Date joiningDate;
 	private String comment;
 	
 	
-	@Enumerated(EnumType.STRING)
-	private CandidateAvailabilityEnum candidateAvailability;
+	
+	private String joiningAvailability;
 	
 	private Date createDate;
 	private Date modifiedDate;
@@ -82,13 +82,7 @@ public class Candidate  {
 		this.phone = phone;
 	}
 
-	@Column(nullable = false)
-	public String getFileUpload() {
-		return fileUpload;
-	}
-	public void setFileUpload(String fileUpload) {
-		this.fileUpload = fileUpload;
-	}
+	
 	
 
 	public String getComment() {
@@ -106,28 +100,17 @@ public class Candidate  {
 		this.skills = skills;
 	}
 	
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	public PositionEnum getPosition() {
-		return position;
-	}
-	public void setPosition(PositionEnum position) {
-		this.position = position;
-	}
 	
-	@Column(nullable = false)
-	public String getCandidateName() {
-		return candidateName;
-	}
-	public void setCandidateName(String candidateName) {
-		this.candidateName = candidateName;
-	}
-	
-	@Enumerated(EnumType.STRING)
-	public CandidateStatus getCandidateStatus() {
+	public String getCandidateStatus() {
 		return candidateStatus;
 	}
-	public void setCandidateStatus(CandidateStatus candidateStatus) {
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	public void setCandidateStatus(String candidateStatus) {
 		this.candidateStatus = candidateStatus;
 	}
 	
@@ -152,16 +135,34 @@ public class Candidate  {
 		this.candidateDate = candidateDate;
 	}
 	
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	public CandidateAvailabilityEnum getCandidateAvailability() {
-		return candidateAvailability;
-	}
-	public void setCandidateAvailability(CandidateAvailabilityEnum candidateAvailability) {
-		this.candidateAvailability = candidateAvailability;
-	}
+	
 	public String getDeleteFlag() {
 		return deleteFlag;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getResume() {
+		return resume;
+	}
+	public void setResume(String resume) {
+		this.resume = resume;
+	}
+
+	public String getJoiningAvailability() {
+		return joiningAvailability;
+	}
+	public void setJoiningAvailability(String joiningAvailability) {
+		this.joiningAvailability = joiningAvailability;
 	}
 	public void setDeleteFlag(String deleteFlag) {
 		this.deleteFlag = deleteFlag;

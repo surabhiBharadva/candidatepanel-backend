@@ -25,10 +25,10 @@ public class Employee {
 	private Long id;
 	private Integer acardNum;
 	private String firstName;
-	private String lname;
+	private String lastName;
 	private String email;
 	private Long phone;	
-	private Date jDate;
+	private Date joiningDate;
 	private String country;
 	private String state;
 	private String city;
@@ -37,7 +37,11 @@ public class Employee {
 	private String pancard;
 	private String marksheet;
 	private EmployeeStatus status;
+	private Date createDate;
+	private Date modifiedDate;
 	
+	private String createBy;
+	private String modifiedBy;
 	
 
 	public EmployeeStatus getStatus() {
@@ -116,15 +120,8 @@ public class Employee {
 	public String getFirstName() {
 		return firstName;
 	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLname() {
-		return lname;
-	}
-	public void setLname(String lname) {
-		this.lname = lname;
-	}
+	
+	
 	public String getEmail() {
 		return email;
 	}
@@ -137,12 +134,7 @@ public class Employee {
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
-	public Date getjDate() {
-		return jDate;
-	}
-	public void setjDate(Date jDate) {
-		this.jDate = jDate;
-	}
+	
 
 	public Integer getAcardNum() {
 		return acardNum;
@@ -151,6 +143,62 @@ public class Employee {
 	public void setAcardNum(Integer acardNum) {
 		this.acardNum = acardNum;
 	}
+
+	
+
+	
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+	
 	
 	
 

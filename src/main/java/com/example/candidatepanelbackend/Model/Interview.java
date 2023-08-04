@@ -2,12 +2,15 @@ package com.example.candidatepanelbackend.Model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.example.candidatepanelbackend.Enum.StatusEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,7 +35,8 @@ public class Interview implements Serializable {
 	
 	private String employeeName;
 	
-	private StatusEnum status;
+	
+	private String status;
 
 	private String feedback;
 	
@@ -40,10 +44,13 @@ public class Interview implements Serializable {
 	@JoinColumn(name = "candidateId",unique=false)
 	private Candidate candidate;
 	
-	
 	private Long employeeId;
 	
+	private Date createDate;
+	private Date modifiedDate;
 	
+	private String createBy;
+	private String modifiedBy;
 
 	public Long getEmployeeId() {
 		return employeeId;
@@ -60,12 +67,12 @@ public class Interview implements Serializable {
 	public void setCandidate(Candidate candidate) {
 		this.candidate = candidate;
 	}
-
-	public StatusEnum getStatus() {
+	
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusEnum status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -98,6 +105,38 @@ public class Interview implements Serializable {
 
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 	
 	

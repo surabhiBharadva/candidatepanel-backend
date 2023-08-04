@@ -42,7 +42,7 @@ public class EmployeeService {
 		employeeSet.setDob(employee.getDob());
 		employeeSet.setEmail(employee.getEmail());
 		employeeSet.setFirstName(employee.getFirstName());
-		employeeSet.setLname(employee.getLname());
+		employeeSet.setLastName(employee.getLastName());
 		employeeSet.setPancard(employee.getPancard());
 		employeeSet.setState(employee.getState());
 		employeeSet.setStatus(employee.getStatus());

@@ -15,13 +15,13 @@ public class InterviewModel {
 	
 	private String employeeName;
 	
-	private StatusEnum status;
+	private String status;
 	
-	public StatusEnum getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusEnum status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

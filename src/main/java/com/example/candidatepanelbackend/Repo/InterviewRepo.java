@@ -13,8 +13,12 @@ import com.example.candidatepanelbackend.Model.Interview;
 @Repository
 public interface InterviewRepo extends JpaRepository<Interview,Long> {
 
-	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE schduleDateTime=CURRENT_DATE")
+	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE status='Scheduled'")
 	List<Interview> findTodayInterview();
+	
+	
+	@Query(nativeQuery = true, value = "SELECT * FROM documentdetails WHERE candidateId =:cadidateId AND status='Selected'")
+	boolean checkStatusSelected(Long cadidateId);
 	
 	
 }

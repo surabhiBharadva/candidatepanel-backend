@@ -55,6 +55,7 @@ public class InterviewController {
 		interview.setEmployeeName(employee.getFirstName());
 		interview.setEmployeeId(employeeId);
 		try {
+			interview.setStatus("Scheduled");
 		interviewSet =  interviewService.addInterview(interview);
 		 candidateService.updateStatus(candidate.getId());
 		}catch(Exception e){

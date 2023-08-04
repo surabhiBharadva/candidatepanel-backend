@@ -43,6 +43,9 @@ public class CandidateService {
 	@Autowired 
 	private ResponseService responseService;
 	
+	@Autowired
+	private InterviewService interviewService;
+	
 	
 
 	public ResponseEntity<Object> saveCandidate(Candidate candidate, MultipartFile file) {
@@ -50,6 +53,7 @@ public class CandidateService {
 		String error  = validateCheck(candidate);
 		candidate.setCreateDate(new Date());
 		candidate.setCandidateDate(new Date());
+		candidate.setCandidateStatus("Pending");
 		Candidate candidateObject = candidateRepo.save(candidate);
 		if(file != null) {
 			documentService.saveDocument(file,candidateObject.getId().intValue());
@@ -62,7 +66,7 @@ public class CandidateService {
 
 	private String validateCheck(Candidate candidate) {
 		String error = "";
-		Boolean value2 = validationUtils.checkVeladationString(candidate.getCandidateName());
+		Boolean value2 = validationUtils.checkVeladationString(candidate.getFirstName());
 		if (value2) {
 			error += "Candidate Name is missing," + " ";
 		}
@@ -78,7 +82,7 @@ public class CandidateService {
 			error += "Candidate Email is missing," + " ";
 		}
 
-		if (validationUtils.checkVeladationString(candidate.getFileUpload())) {
+		if (validationUtils.checkVeladationString(candidate.getResume())) {
 			error += "Candidate File Upload is missing," + " ";
 		}
 
@@ -95,8 +99,8 @@ public class CandidateService {
 				DocumentDetilsModel documentDetails = documentService.getFile(l.getId().intValue());
 				candidate.setDocumentDetails(documentDetails);
 			}
-
-			candidate.setCandidateName(l.getCandidateName());
+			candidate.setFirstName(l.getFirstName());
+			candidate.setLastName(l.getLastName());
 			candidate.setComment(l.getComment());
 			candidate.setJoiningDate(l.getJoiningDate());
 			candidate.setPhone(l.getPhone());
@@ -106,7 +110,7 @@ public class CandidateService {
 			candidate.setCandidateStatus(l.getCandidateStatus());
 			candidate.setSkills(l.getSkills());
 			candidate.setCandidateDate(l.getCandidateDate());
-			candidate.setCandidateAvailability(l.getCandidateAvailability());
+			candidate.setJoiningAvailability(l.getJoiningAvailability());
 			getList.add(candidate);
 		}
 
@@ -123,29 +127,40 @@ public class CandidateService {
 		Candidate candidateSet = candidateRepo.findById(id).get();
 		
 		candidateSet.setEmail(candidate.getEmail());
-		candidateSet.setCandidateName(candidate.getCandidateName());
+		candidateSet.setFirstName(candidate.getFirstName());
+		candidateSet.setLastName(candidate.getLastName());
 		candidateSet.setPhone(candidate.getPhone());
 		candidateSet.setComment(candidate.getComment());
 		candidateSet.setJoiningDate(candidate.getJoiningDate());
 		candidateSet.setPosition(candidate.getPosition());
-		candidateSet.setFileUpload(candidate.getFileUpload());
+		candidateSet.setResume(candidate.getResume());
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
-		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OFFERREJECTED) || (candidateSet.getCandidateStatus().equals(CandidateStatus.INTERVIEWREJECTED))) {
+		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OfferRejected) || (candidateSet.getCandidateStatus().equals(CandidateStatus.InterviewRejected))) {
 			candidateSet.setDeleteFlag("Y");
 		}
-		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OFFERACCEPTED)) {
-			Employee employee = new Employee();
-			employee.setFirstName(candidate.getCandidateName());
-			employee.setjDate(candidate.getJoiningDate());
-			employee.setPhone(candidate.getPhone());
-			employee.setEmail(candidate.getEmail());
-			employeeService.addEmployee(employee, null);
+		if (candidateSet.getCandidateStatus().equals(CandidateStatus.OfferAccepted)) {
+
+			if (interviewService.checkStatusSelected(candidate.getId())) {
+
+				Employee employee = new Employee();
+				employee.setFirstName(candidate.getFirstName());
+				employee.setLastName(candidate.getLastName());
+				employee.setJoiningDate(candidate.getJoiningDate());
+				employee.setPhone(candidate.getPhone());
+				employee.setEmail(candidate.getEmail());
+				employeeService.addEmployee(employee, null);
+			}else {
+				 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Interviewer Status in Selected",ResponseStatus.Error));
+			}
+
 		}
 		candidateSet.setSkills(candidate.getSkills());
 		candidateSet.setModifiedDate(new Date());
-		candidateSet.setCandidateAvailability(candidate.getCandidateAvailability());
-        final Candidate candidateUpdate = candidateRepo.save(candidateSet);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Candidate Update Successfully", candidateUpdate,ResponseStatus.Success));
+		candidateSet.setJoiningAvailability(candidate.getJoiningAvailability());
+		
+		final Candidate candidateUpdate = candidateRepo.save(candidateSet);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(
+				responseService.RespnseData("Candidate Update Successfully", candidateUpdate, ResponseStatus.Success));
 	}
 
 	public Candidate getByIdCandidate(Long id) {
@@ -158,7 +173,8 @@ public class CandidateService {
 		List<CandidateModel> getList = new ArrayList<CandidateModel>();
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
-			candidate.setCandidateName(l.getCandidateName());
+			candidate.setFirstName(l.getFirstName());
+			candidate.setLastName(l.getLastName());
 			candidate.setId(l.getId());
 			getList.add(candidate);
 		}
@@ -168,6 +184,14 @@ public class CandidateService {
 	public void updateStatus(Long id) {
 		candidateRepo.updateStatus(id);
 		
+	}
+
+	public void updateStatusCandidateSelected(Long id, boolean update) {
+		if (update) {
+			candidateRepo.updateStatusCandidateSelected(id);
+		} else {
+			candidateRepo.updateStatusCandidateRejected(id);
+		}
 	}
 
 }

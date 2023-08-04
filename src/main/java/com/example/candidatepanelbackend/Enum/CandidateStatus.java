@@ -1,5 +1,5 @@
 package com.example.candidatepanelbackend.Enum;
 
 public enum CandidateStatus {
-	PENDING,INTERVIEW,INTERVIEWSELECTED,INTERVIEWREJECTED,OFFERACCEPTED,OFFERREJECTED,JOINING;
+	Pending,PendingInterview,InterviewSelected,InterviewRejected,OfferAccepted,OfferRejected,Joined;
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
+import com.example.candidatepanelbackend.Enum.StatusEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.Interview;
@@ -39,14 +40,15 @@ public class InterviewService {
 	public List<InterviewModel> getInterview() {
 		
 	  
-	   List<Interview> interviewList = interviewRepo.findAll();
+	   List<Interview> interviewList = interviewRepo.findTodayInterview();
 	   List<InterviewModel> interviewAdd = new ArrayList<InterviewModel>();
 		for(Interview interview : interviewList) {
 			InterviewModel interviewModel = new InterviewModel();
 			if(interview.getCandidate() != null && interview.getCandidate().getId() != null) {
 			Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
 			CandidateModel candidateModel = new CandidateModel(); 
-			candidateModel.setCandidateName(candidate.getCandidateName());
+			candidateModel.setFirstName(candidate.getFirstName());
+			candidateModel.setLastName(candidate.getLastName());
 			candidateModel.setPosition(candidate.getPosition());
 			interviewModel.setCandidate(candidateModel);
 		}
@@ -58,13 +60,19 @@ public class InterviewService {
 			
 			interviewAdd.add(interviewModel);
 		}
-		 List<Interview> interList = interviewRepo.findTodayInterview();
 		return interviewAdd;
 	}
 
 	public ResponseEntity<Object> updateInterview(Long id, Interview interview) {
 		try {
 		Interview interviewSet = interviewRepo.findById(id).get();
+		if(interview.getStatus().equals("Selected")) {
+			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),true);
+		}
+		if(interview.getStatus().equals("Rejected")) {
+			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),false);
+		}
+	
 		interviewSet.setStatus(interview.getStatus());
 		interviewSet.setFeedback(interview.getFeedback());
 		
@@ -84,8 +92,8 @@ public class InterviewService {
 		Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
 		CandidateModel candidateModel = new CandidateModel();
 		InterviewModel interviewModel = new InterviewModel();
-		candidateModel.setCandidateName(candidate.getCandidateName());
-		
+		candidateModel.setFirstName(candidate.getFirstName());
+		candidateModel.setLastName(candidate.getLastName());
 		interviewModel.setId(interview.getId());
 		interviewModel.setStatus(interview.getStatus());
 		interviewModel.setCandidate(candidateModel);
@@ -94,6 +102,11 @@ public class InterviewService {
 	public Interview getById(Long id) {
 		Interview interview = interviewRepo.findById(id).get();
 		return interview;
+	}
+
+	public boolean checkStatusSelected(Long cadidateId) {
+		
+	return interviewRepo.checkStatusSelected(cadidateId);
 	}
 
 	

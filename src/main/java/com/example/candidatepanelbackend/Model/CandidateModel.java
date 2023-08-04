@@ -13,9 +13,10 @@ import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 public class CandidateModel {
 	
 	private Long id;
-	private String candidateName;
-	
-	private PositionEnum position;
+	private String firstName;
+
+	private String lastName;
+	private String position;
 	private String email;
 	private Long phone;
 	private String skills;
@@ -23,24 +24,19 @@ public class CandidateModel {
 	private Date joiningDate;
 	private String comment;
 	private DocumentDetilsModel documentDetails;
-	private CandidateStatus candidateStatus;
+	private String candidateStatus;
 	
-	private CandidateAvailabilityEnum candidateAvailability;
+	private String joiningAvailability;
 	
 	private Date candidateDate;
-	private StatusActionEnum  status;
+	private String  status;
 	
 	
-	public String getCandidateName() {
-		return candidateName;
-	}
-	public void setCandidateName(String candidateName) {
-		this.candidateName = candidateName;
-	}
-	public CandidateStatus getCandidateStatus() {
+	
+	public String getCandidateStatus() {
 		return candidateStatus;
 	}
-	public void setCandidateStatus(CandidateStatus candidateStatus) {
+	public void setCandidateStatus(String candidateStatus) {
 		this.candidateStatus = candidateStatus;
 	}
 	public Long getId() {
@@ -50,10 +46,10 @@ public class CandidateModel {
 		this.id = id;
 	}
 	
-	public PositionEnum getPosition() {
+	public String getPosition() {
 		return position;
 	}
-	public void setPosition(PositionEnum position) {
+	public void setPosition(String position) {
 		this.position = position;
 	}
 	public String getEmail() {
@@ -93,26 +89,32 @@ public class CandidateModel {
 	public void setCandidateDate(Date candidateDate) {
 		this.candidateDate = candidateDate;
 	}
-	public CandidateAvailabilityEnum getCandidateAvailability() {
-		return candidateAvailability;
-	}
-	public void setCandidateAvailability(CandidateAvailabilityEnum candidateAvailability) {
-		this.candidateAvailability = candidateAvailability;
-	}
-	public StatusActionEnum isStatus() {
-		return status;
-	}
-	public void setStatus(StatusActionEnum inanctive) {
-		this.status = inanctive;
-	}
+	
+	
 	public Date getJoiningDate() {
 		return joiningDate;
 	}
 	public void setJoiningDate(Date joiningDate) {
 		this.joiningDate = joiningDate;
 	}
-	public StatusActionEnum getStatus() {
-		return status;
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getJoiningAvailability() {
+		return joiningAvailability;
+	}
+	public void setJoiningAvailability(String joiningAvailability) {
+		this.joiningAvailability = joiningAvailability;
 	}
 	
 	
