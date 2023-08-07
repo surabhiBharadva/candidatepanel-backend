@@ -18,7 +18,7 @@ public class CandidateModel {
 	private String lastName;
 	private String position;
 	private String email;
-	private Long phone;
+	private Long phoneNo;
 	private String skills;
 
 	private Date joiningDate;
@@ -28,7 +28,7 @@ public class CandidateModel {
 	
 	private String joiningAvailability;
 	
-	private Date candidateDate;
+	private Date applicationDate;
 	private String  status;
 	
 	
@@ -58,12 +58,7 @@ public class CandidateModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Long getPhone() {
-		return phone;
-	}
-	public void setPhone(Long phone) {
-		this.phone = phone;
-	}
+	
 	public String getSkills() {
 		return skills;
 	}
@@ -83,13 +78,6 @@ public class CandidateModel {
 	public void setDocumentDetails(DocumentDetilsModel documentDetails) {
 		this.documentDetails = documentDetails;
 	}
-	public Date getCandidateDate() {
-		return candidateDate;
-	}
-	public void setCandidateDate(Date candidateDate) {
-		this.candidateDate = candidateDate;
-	}
-	
 	
 	public Date getJoiningDate() {
 		return joiningDate;
@@ -115,6 +103,24 @@ public class CandidateModel {
 	}
 	public void setJoiningAvailability(String joiningAvailability) {
 		this.joiningAvailability = joiningAvailability;
+	}
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public Long getPhoneNo() {
+		return phoneNo;
+	}
+	public void setPhoneNo(Long phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 	
 	

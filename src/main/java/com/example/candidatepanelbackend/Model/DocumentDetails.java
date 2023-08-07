@@ -30,15 +30,60 @@ public class DocumentDetails  {
 	private Double size;
 
 	private String hash;
+	
 
 	@Lob
     @Basic(fetch = FetchType.LAZY)
 	private byte[] fileData;
+	
 
 	public Integer candidateId;
 	
 	private Integer status;
+	private Date createDate;
+	private Date modifiedDate;
 	
+	private String createBy;
+	private String modifiedBy;
+	
+	
+	
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
 	public static final int RADIX = 16;
 	
 

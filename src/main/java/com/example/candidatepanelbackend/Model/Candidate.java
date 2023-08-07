@@ -15,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,10 +35,12 @@ public class Candidate  {
 	
 	private String position;
 	
-	private Date candidateDate;
+	private Date applicationDate;
 	private String email;
-	private Long phone;
+	private Long phoneNo;
 	private String skills;
+	
+	@Transient
 	private String resume;
 	
 	
@@ -75,19 +78,18 @@ public class Candidate  {
 	}
 	
 	@Column(nullable = false, unique = false)
-	public Long getPhone() {
-		return phone;
+	public Long getPhoneNo() {
+		return phoneNo;
 	}
-	public void setPhone(Long phone) {
-		this.phone = phone;
+	public void setPhoneNo(Long phoneNo) {
+		this.phoneNo = phoneNo;
 	}
-
-	
 	
 
 	public String getComment() {
 		return comment;
 	}
+	
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -128,14 +130,15 @@ public class Candidate  {
 		this.modifiedDate = modifiedDate;
 	}
 	
-	public Date getCandidateDate() {
-		return candidateDate;
-	}
-	public void setCandidateDate(Date candidateDate) {
-		this.candidateDate = candidateDate;
-	}
 	
 	
+	
+	public Date getApplicationDate() {
+		return applicationDate;
+	}
+	public void setApplicationDate(Date applicationDate) {
+		this.applicationDate = applicationDate;
+	}
 	public String getDeleteFlag() {
 		return deleteFlag;
 	}

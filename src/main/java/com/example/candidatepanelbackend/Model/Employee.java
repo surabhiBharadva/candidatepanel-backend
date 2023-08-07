@@ -39,7 +39,7 @@ public class Employee {
 	private EmployeeStatus status;
 	private Date createDate;
 	private Date modifiedDate;
-	
+	private String address;
 	private String createBy;
 	private String modifiedBy;
 	
@@ -197,6 +197,14 @@ public class Employee {
 
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	
 	

@@ -11,14 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.candidatepanelbackend.Enum.CandidateStatus;
-import com.example.candidatepanelbackend.Enum.PositionEnum;
+import com.example.candidatepanelbackend.Constants.Constants;
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
-import com.example.candidatepanelbackend.Enum.StatusActionEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Employee;
+import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Repo.CandidateRepo;
 import com.example.candidatepanelbackend.utils.ValidationsUtilsString;
 
@@ -51,9 +50,13 @@ public class CandidateService {
 	public ResponseEntity<Object> saveCandidate(Candidate candidate, MultipartFile file) {
 		
 		String error  = validateCheck(candidate);
+		candidate.setCandidateStatus(Constants.UnderScreening);
 		candidate.setCreateDate(new Date());
-		candidate.setCandidateDate(new Date());
-		candidate.setCandidateStatus("Pending");
+		candidate.setCreateBy("Admin");
+		candidate.setModifiedBy("Admin");
+		candidate.setModifiedDate(new Date());
+		candidate.setApplicationDate(new Date());
+	
 		Candidate candidateObject = candidateRepo.save(candidate);
 		if(file != null) {
 			documentService.saveDocument(file,candidateObject.getId().intValue());
@@ -74,7 +77,7 @@ public class CandidateService {
 			error += "Candidate Skills is missing," + " ";
 		}
 
-		if (validationUtils.checkVeladationLong(candidate.getPhone())) {
+		if (validationUtils.checkVeladationLong(candidate.getPhoneNo())) {
 			error += "Candidate Phone Number is missing," + " ";
 		}
 		Boolean value = validationUtils.checkVeladationString(candidate.getEmail());
@@ -103,13 +106,13 @@ public class CandidateService {
 			candidate.setLastName(l.getLastName());
 			candidate.setComment(l.getComment());
 			candidate.setJoiningDate(l.getJoiningDate());
-			candidate.setPhone(l.getPhone());
+			candidate.setPhoneNo(l.getPhoneNo());
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
 			candidate.setPosition(l.getPosition());
 			candidate.setCandidateStatus(l.getCandidateStatus());
 			candidate.setSkills(l.getSkills());
-			candidate.setCandidateDate(l.getCandidateDate());
+			candidate.setApplicationDate(l.getApplicationDate());
 			candidate.setJoiningAvailability(l.getJoiningAvailability());
 			getList.add(candidate);
 		}
@@ -129,24 +132,27 @@ public class CandidateService {
 		candidateSet.setEmail(candidate.getEmail());
 		candidateSet.setFirstName(candidate.getFirstName());
 		candidateSet.setLastName(candidate.getLastName());
-		candidateSet.setPhone(candidate.getPhone());
+		candidateSet.setPhoneNo(candidate.getPhoneNo());
 		candidateSet.setComment(candidate.getComment());
 		candidateSet.setJoiningDate(candidate.getJoiningDate());
+		candidateSet.setModifiedBy("Admin");
 		candidateSet.setPosition(candidate.getPosition());
 		candidateSet.setResume(candidate.getResume());
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
-		if(candidateSet.getCandidateStatus().equals(CandidateStatus.OfferRejected) || (candidateSet.getCandidateStatus().equals(CandidateStatus.InterviewRejected))) {
+		if(candidateSet.getCandidateStatus().equals(Constants.Rejected) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
 			candidateSet.setDeleteFlag("Y");
 		}
-		if (candidateSet.getCandidateStatus().equals(CandidateStatus.OfferAccepted)) {
-
-			if (interviewService.checkStatusSelected(candidate.getId())) {
+		if (candidateSet.getCandidateStatus().equals(Constants.OfferAccepted)) {
+		Interview interview = interviewService.checkStatusSelected(candidate.getId());
+			if (interview != null) {
 
 				Employee employee = new Employee();
 				employee.setFirstName(candidate.getFirstName());
 				employee.setLastName(candidate.getLastName());
 				employee.setJoiningDate(candidate.getJoiningDate());
-				employee.setPhone(candidate.getPhone());
+				employee.setCreateDate(new Date());
+				employee.setModifiedDate(new Date());
+				employee.setPhone(candidate.getPhoneNo());
 				employee.setEmail(candidate.getEmail());
 				employeeService.addEmployee(employee, null);
 			}else {

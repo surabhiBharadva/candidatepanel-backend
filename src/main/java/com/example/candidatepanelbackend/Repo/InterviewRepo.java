@@ -17,8 +17,11 @@ public interface InterviewRepo extends JpaRepository<Interview,Long> {
 	List<Interview> findTodayInterview();
 	
 	
-	@Query(nativeQuery = true, value = "SELECT * FROM documentdetails WHERE candidateId =:cadidateId AND status='Selected'")
-	boolean checkStatusSelected(Long cadidateId);
+	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE candidateId =:cadidateId and status='Selected'")
+	Interview checkStatusSelected(Long cadidateId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE candidateId =:candidateId")
+	Interview getInterviewBycandidateId(Long candidateId);
 	
 	
 }

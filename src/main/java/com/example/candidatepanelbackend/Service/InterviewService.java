@@ -1,8 +1,7 @@
 package com.example.candidatepanelbackend.Service;
 
 import java.util.ArrayList;
-
-
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.candidatepanelbackend.Constants.Constants;
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Enum.StatusEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
+import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Repo.InterviewRepo;
@@ -31,8 +32,13 @@ public class InterviewService {
 	
 	@Autowired
 	private ResponseService responseService;
+	
+	@Autowired
+	private DocumentService documentService;
 
 	public Interview addInterview(Interview interview) {
+		interview.setCreateDate(new Date());
+		interview.setModifiedDate(new Date());
 		return interviewRepo.save(interview);
 		
 	}
@@ -45,11 +51,17 @@ public class InterviewService {
 		for(Interview interview : interviewList) {
 			InterviewModel interviewModel = new InterviewModel();
 			if(interview.getCandidate() != null && interview.getCandidate().getId() != null) {
-			Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
+			
 			CandidateModel candidateModel = new CandidateModel(); 
-			candidateModel.setFirstName(candidate.getFirstName());
-			candidateModel.setLastName(candidate.getLastName());
-			candidateModel.setPosition(candidate.getPosition());
+			candidateModel.setFirstName(interview.getCandidate().getFirstName());
+			candidateModel.setLastName(interview.getCandidate().getLastName());
+			candidateModel.setPosition(interview.getCandidate().getPosition());
+			candidateModel.setEmail(interview.getCandidate().getEmail());
+			candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
+			if (interview.getCandidate().getId() != null) {
+				DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId().intValue());
+				candidateModel.setDocumentDetails(documentDetails);
+			}
 			interviewModel.setCandidate(candidateModel);
 		}
 			interviewModel.setStatus(interview.getStatus());
@@ -66,13 +78,13 @@ public class InterviewService {
 	public ResponseEntity<Object> updateInterview(Long id, Interview interview) {
 		try {
 		Interview interviewSet = interviewRepo.findById(id).get();
-		if(interview.getStatus().equals("Selected")) {
+		if(interview.getStatus().equals(Constants.Selected)) {
 			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),true);
 		}
-		if(interview.getStatus().equals("Rejected")) {
+		if(interview.getStatus().equals(Constants.Rejected)) {
 			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),false);
 		}
-	
+		interviewSet.setModifiedDate(new Date());
 		interviewSet.setStatus(interview.getStatus());
 		interviewSet.setFeedback(interview.getFeedback());
 		
@@ -94,20 +106,26 @@ public class InterviewService {
 		InterviewModel interviewModel = new InterviewModel();
 		candidateModel.setFirstName(candidate.getFirstName());
 		candidateModel.setLastName(candidate.getLastName());
+
 		interviewModel.setId(interview.getId());
 		interviewModel.setStatus(interview.getStatus());
 		interviewModel.setCandidate(candidateModel);
 		return interviewModel;
 	}
+
 	public Interview getById(Long id) {
 		Interview interview = interviewRepo.findById(id).get();
 		return interview;
 	}
 
-	public boolean checkStatusSelected(Long cadidateId) {
-		
-	return interviewRepo.checkStatusSelected(cadidateId);
+	public Interview checkStatusSelected(Long cadidateId) {
+
+		return interviewRepo.checkStatusSelected(cadidateId);
 	}
 
+	public Interview getInterviewBycandidateId(Long candidateId) {
+		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
+		return interview;
+	}
 	
 }

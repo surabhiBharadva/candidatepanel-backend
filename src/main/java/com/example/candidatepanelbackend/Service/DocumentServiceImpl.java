@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -57,7 +58,8 @@ public class DocumentServiceImpl implements DocumentService {
 		if (file == null) {
 			logger.error("File not Found...");
 		}
-
+		entity.setModifiedDate(new Date());
+		entity.setCreateDate(new Date());
 		entity.setCandidateId(id);
 		entity.setName(file.getOriginalFilename());
 		try {

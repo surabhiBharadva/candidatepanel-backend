@@ -1,5 +1,6 @@
 package com.example.candidatepanelbackend.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,6 +47,8 @@ public class EmployeeService {
 		employeeSet.setPancard(employee.getPancard());
 		employeeSet.setState(employee.getState());
 		employeeSet.setStatus(employee.getStatus());
+		employeeSet.setModifiedDate(new Date());
+		employeeSet.setAddress(employee.getAddress());
 		final Employee updatedEmployee = employeeRepo.save(employeeSet);
 		return updatedEmployee;
 		

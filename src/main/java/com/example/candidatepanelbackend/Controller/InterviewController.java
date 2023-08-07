@@ -83,10 +83,17 @@ public class InterviewController {
 		}
 
 	}
+	
 	@GetMapping("/interview/{id}")
 	private ResponseEntity<InterviewModel> getByIdCandidate(@PathVariable Long id) {
 		InterviewModel candidateSave = interviewService.getByIdInterView(id);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/interviewGet/{candidateId}")
+	private ResponseEntity<Interview> getInterviewBycandidateId(@PathVariable Long candidateId) {
+		Interview interviewget = interviewService.getInterviewBycandidateId(candidateId);
+		return new ResponseEntity<>(interviewget, HttpStatus.CREATED);
 	}
 	
 	
