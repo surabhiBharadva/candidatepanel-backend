@@ -1,5 +1,6 @@
 package com.example.candidatepanelbackend.Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Service.CandidateService;
+import com.example.candidatepanelbackend.Service.DocumentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.candidatepanelbackend.Service.ResponseService;
+import com.example.candidatepanelbackend.utils.ResponseBean;
 
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -36,19 +40,19 @@ public class CandidateController {
 
 	@Autowired
 	ObjectMapper mapper;
-
+	
 	@Autowired
-	private ResponseService responseService;
+	private DocumentService documentService;
 
 	@PostMapping("/candidate")
-	private ResponseEntity<Object> saveCandidate(@RequestParam("candidate") String candidate,
+	private ResponseBean saveCandidate(@RequestParam("candidate") String candidate,
 			@RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		Candidate candidateObject = mapper.readValue(candidate, Candidate.class);
 		try {
 			return candidateService.saveCandidate(candidateObject, file);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED)
-					.body(responseService.RespnseData("Candidate Alredy exits",com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went wrongs",ResponseStatus.Error);
+			
 		}
 	}
 
@@ -66,12 +70,12 @@ public class CandidateController {
 
 
 	@PutMapping("/candidate/{id}")
-	private ResponseEntity<Object> updateCandidate(@PathVariable Long id, @RequestBody Candidate candidate) {
+	private ResponseBean updateCandidate(@PathVariable Long id, @RequestBody Candidate candidate) {
 		try {
 			return candidateService.updateCandidate(id, candidate);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED)
-					.body(responseService.RespnseData("Candidate Alredy exits"));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went wrong",ResponseStatus.Error);
+			
 		}
 
 	}
@@ -80,6 +84,13 @@ public class CandidateController {
 	private ResponseEntity<Candidate> getByIdCandidate(@PathVariable Long id) {
 		Candidate candidateSave = candidateService.getByIdCandidate(id);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("download/{fileName}")
+	ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable("fileName") String fileName)
+			throws IOException {
+		return documentService.getFile(fileName);
+
 	}
 
 }

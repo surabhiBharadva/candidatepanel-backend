@@ -3,6 +3,7 @@ package com.example.candidatepanelbackend.Controller;
 import java.util.List;
 
 
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.candidatepanelbackend.Constants.Constants;
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.Employee;
@@ -25,7 +27,7 @@ import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Service.CandidateService;
 import com.example.candidatepanelbackend.Service.EmployeeService;
 import com.example.candidatepanelbackend.Service.InterviewService;
-import com.example.candidatepanelbackend.Service.ResponseService;
+import com.example.candidatepanelbackend.utils.ResponseBean;
 
 
 
@@ -43,11 +45,10 @@ public class InterviewController {
 	@Autowired 
 	private EmployeeService employeeService;
 	
-	@Autowired
-	private ResponseService responseService;
+	
 	
 	@PostMapping("/interview/{candidateId}/{employeeId}")
-	private ResponseEntity<Object> addInterview(@PathVariable Long candidateId,@RequestBody Interview interview,@PathVariable Long employeeId){
+	private ResponseBean addInterview(@PathVariable Long candidateId,@RequestBody Interview interview,@PathVariable Long employeeId){
 		Interview interviewSet = null;
 		Candidate candidate = candidateService.getByIdCandidate(candidateId);
 		interview.setCandidate(candidate);
@@ -55,14 +56,15 @@ public class InterviewController {
 		interview.setEmployeeName(employee.getFirstName());
 		interview.setEmployeeId(employeeId);
 		try {
-			interview.setStatus("Scheduled");
-		interviewSet =  interviewService.addInterview(interview);
+			interview.setStatus(Constants.Scheduled);
+			interviewSet = interviewService.addInterview(interview);
 		 candidateService.updateStatus(candidate.getId());
 		}catch(Exception e){
-			return ResponseEntity.status(HttpStatus.ACCEPTED)
-					.body(responseService.RespnseData("Interview Already Schedule",com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success, "Interview Already Schedule",ResponseStatus.Error);
+			
 		}
-		 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Interview Schedule add Successfully", interviewSet,ResponseStatus.Success));
+		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,interviewSet, "Interview Schedule add Successfully");
+		
 	}
 	
 	@GetMapping("/interview")
@@ -73,13 +75,13 @@ public class InterviewController {
 	}
 	
 	@PutMapping("/interview/{id}")
-	private ResponseEntity<Object> updateInterview(@PathVariable Long id, @RequestBody Interview interview) {
+	private ResponseBean updateInterview(@PathVariable Long id, @RequestBody Interview interview) {
 
 		try {
 			return interviewService.updateInterview(id, interview);
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("data", e,
-					com.example.candidatepanelbackend.Enum.ResponseStatus.Error));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"data",ResponseStatus.Error);
+			
 		}
 
 	}

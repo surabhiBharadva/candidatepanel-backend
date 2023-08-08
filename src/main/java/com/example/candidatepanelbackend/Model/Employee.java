@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Employee {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
 	private Long id;
 	private Integer acardNum;
 	private String firstName;
@@ -109,7 +108,7 @@ public class Employee {
 	}
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}

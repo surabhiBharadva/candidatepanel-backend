@@ -2,6 +2,7 @@ package com.example.candidatepanelbackend.Service;
 
 import java.util.ArrayList;
 
+
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Repo.CandidateRepo;
+import com.example.candidatepanelbackend.utils.ResponseBean;
 import com.example.candidatepanelbackend.utils.ValidationsUtilsString;
 
 import lombok.AllArgsConstructor;
@@ -39,17 +41,19 @@ public class CandidateService {
 	@Autowired
 	private ValidationsUtilsString validationUtils;
 	
-	@Autowired 
-	private ResponseService responseService;
+
 	
 	@Autowired
 	private InterviewService interviewService;
 	
 	
 
-	public ResponseEntity<Object> saveCandidate(Candidate candidate, MultipartFile file) {
+	public ResponseBean saveCandidate(Candidate candidate, MultipartFile file) {
 		
 		String error  = validateCheck(candidate);
+		if(!error.isEmpty()) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,error,ResponseStatus.Error);
+		}
 		candidate.setCandidateStatus(Constants.UnderScreening);
 		candidate.setCreateDate(new Date());
 		candidate.setCreateBy("Admin");
@@ -61,10 +65,9 @@ public class CandidateService {
 		if(file != null) {
 			documentService.saveDocument(file,candidateObject.getId().intValue());
 		}
-		if(!error.isEmpty()) {
-			 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData(error,ResponseStatus.Error));
-		}
-		 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Candidate add Successfully", candidateObject,ResponseStatus.Success));
+		
+		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,candidateObject, "Thank You For Applying to Nexscend Technologies");
+		 
 	}
 
 	private String validateCheck(Candidate candidate) {
@@ -121,10 +124,11 @@ public class CandidateService {
 		
 	}
 
-	public ResponseEntity<Object> updateCandidate(Long id, Candidate candidate) {
+	public ResponseBean updateCandidate(Long id, Candidate candidate) {
 		String error = validateCheck(candidate);
 		if(!error.isEmpty()) {
-			 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData(error,ResponseStatus.Error));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,error,ResponseStatus.Error);
+			
 		}
 		
 		Candidate candidateSet = candidateRepo.findById(id).get();
@@ -156,7 +160,8 @@ public class CandidateService {
 				employee.setEmail(candidate.getEmail());
 				employeeService.addEmployee(employee, null);
 			}else {
-				 return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService.RespnseData("Interviewer Status in Selected",ResponseStatus.Error));
+				return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Interviewer Status in Selected",ResponseStatus.Error);
+			
 			}
 
 		}
@@ -165,8 +170,8 @@ public class CandidateService {
 		candidateSet.setJoiningAvailability(candidate.getJoiningAvailability());
 		
 		final Candidate candidateUpdate = candidateRepo.save(candidateSet);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(
-				responseService.RespnseData("Candidate Update Successfully", candidateUpdate, ResponseStatus.Success));
+		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,candidateUpdate, "Candidate Update Sucessfully to Nexscend Technologies");
+		
 	}
 
 	public Candidate getByIdCandidate(Long id) {

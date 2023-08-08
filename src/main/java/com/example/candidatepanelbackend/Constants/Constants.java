@@ -1,6 +1,8 @@
 package com.example.candidatepanelbackend.Constants;
 
 public final class Constants {
+	public static final String LOG4j_FILE_PATH = "C:\\Users\\Surabhi\\Downloads\\emp_management\\src\\main\\resources\\log4j.properties";
+
 	public static String UnderScreening = "UnderScreening";
 	public static String OfferAccepted = "OfferAccepted";
 	public static String OfferRejected = "OfferRejected";

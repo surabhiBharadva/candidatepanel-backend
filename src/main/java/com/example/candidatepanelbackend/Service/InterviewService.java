@@ -1,6 +1,7 @@
 package com.example.candidatepanelbackend.Service;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Repo.InterviewRepo;
+import com.example.candidatepanelbackend.utils.ResponseBean;
 
 
 
@@ -30,9 +32,7 @@ public class InterviewService {
 	@Autowired
 	private CandidateService candidateService;
 	
-	@Autowired
-	private ResponseService responseService;
-	
+
 	@Autowired
 	private DocumentService documentService;
 
@@ -75,7 +75,7 @@ public class InterviewService {
 		return interviewAdd;
 	}
 
-	public ResponseEntity<Object> updateInterview(Long id, Interview interview) {
+	public ResponseBean updateInterview(Long id, Interview interview) {
 		try {
 		Interview interviewSet = interviewRepo.findById(id).get();
 		if(interview.getStatus().equals(Constants.Selected)) {
@@ -90,11 +90,11 @@ public class InterviewService {
 		
 		//interviewSet.setCandidate(interviewSet.getCandidate());
 		final Interview interviewUpdate = interviewRepo.save(interviewSet);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService
-				.RespnseData("Interview Schedule Update Successfully", interviewUpdate, ResponseStatus.Success));
+		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,interviewUpdate, "Interview Schedule Update Successfully");
+		
 		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseService
-					.RespnseData("data" ,e, ResponseStatus.Error));
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went to wrong",ResponseStatus.Error);
+			
 		}
 		
 	}

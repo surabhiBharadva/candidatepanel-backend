@@ -1,10 +1,8 @@
 package com.example.candidatepanelbackend.Service;
 
 import java.io.IOException;
-
-
-
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,12 +10,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
@@ -38,14 +39,21 @@ public class DocumentServiceImpl implements DocumentService {
 
 	private final Path fileLocation;
 	
+	private final Path fileSaveLocation;
+
+	
+	
 	@Autowired
 	DocumentRepository repository;
 	
 	@Autowired
 	public DocumentServiceImpl(DocumentStorageProperty documentStorageProperty) {
 		this.fileLocation = Paths.get(documentStorageProperty.getUploadDirectory()).toAbsolutePath().normalize();
+		this.fileSaveLocation = Paths.get(documentStorageProperty.getSaveDirectory()).toAbsolutePath().normalize();
+
 		try {
 			Files.createDirectories(this.fileLocation);
+			Files.createDirectories(this.fileSaveLocation);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
@@ -293,6 +301,27 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		return docuOptional;
 		
 	}
+	@Override
+	public ResponseEntity<Resource> getFile(String fileName) throws IOException {
+
+		Path filePath = this.fileSaveLocation.toAbsolutePath().normalize().resolve(fileName);
+//		if(!Files.exists(filePath)) {
+//			throw new FileNotFoundException("File Not Found Exception");
+//		}
+
+		Resource urlResource = null;
+		try {
+			urlResource = new UrlResource(filePath.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("file-Name", fileName);
+		httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;File-Name=" + fileName);
+		return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
+				.headers(httpHeaders).body(urlResource);
+	}
+
 
 
 }
