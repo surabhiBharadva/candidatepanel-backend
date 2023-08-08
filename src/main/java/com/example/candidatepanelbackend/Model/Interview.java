@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -40,24 +41,28 @@ public class Interview implements Serializable {
 
 	private String feedback;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "candidateId",unique=false)
 	private Candidate candidate;
 	
-	private Long employeeId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employeeId",unique=false)
+	private Employee employee;
 	
-	private Date createDate;
+	private Date createdDate;
+	private String createdBy;
 	private Date modifiedDate;
-	
-	private String createBy;
 	private String modifiedBy;
+	private String deleteFlag;
+	
 
-	public Long getEmployeeId() {
-		return employeeId;
+	
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public Candidate getCandidate() {
@@ -107,13 +112,7 @@ public class Interview implements Serializable {
 		this.feedback = feedback;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+	
 
 	public Date getModifiedDate() {
 		return modifiedDate;
@@ -123,12 +122,22 @@ public class Interview implements Serializable {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getCreateBy() {
-		return createBy;
+
+
+	public Date getCreatedDate() {
+		return createdDate;
 	}
 
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public String getModifiedBy() {
@@ -137,6 +146,14 @@ public class Interview implements Serializable {
 
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+
+	public String getDeleteFlag() {
+		return deleteFlag;
+	}
+
+	public void setDeleteFlag(String deleteFlag) {
+		this.deleteFlag = deleteFlag;
 	}
 	
 	

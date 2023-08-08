@@ -49,10 +49,15 @@ public class CandidateController {
 			@RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
 		Candidate candidateObject = mapper.readValue(candidate, Candidate.class);
 		try {
-			return candidateService.saveCandidate(candidateObject, file);
+			if (candidateObject.getId() != null) {
+				return candidateService.updateCandidate(candidateObject.getId(), candidateObject, file);
+			} else {
+				return candidateService.saveCandidate(candidateObject, file);
+			}
 		} catch (Exception e) {
-			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went wrongs",ResponseStatus.Error);
-			
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went wrongs",
+					ResponseStatus.Error);
+
 		}
 	}
 
@@ -70,9 +75,10 @@ public class CandidateController {
 
 
 	@PutMapping("/candidate/{id}")
-	private ResponseBean updateCandidate(@PathVariable Long id, @RequestBody Candidate candidate) {
+	private ResponseBean updateCandidate(@PathVariable Long id,@RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException{
+		Candidate candidateObject = mapper.readValue("", Candidate.class);
 		try {
-			return candidateService.updateCandidate(id, candidate);
+			return candidateService.updateCandidate(id, candidateObject,file);
 		} catch (Exception e) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went wrong",ResponseStatus.Error);
 			
@@ -86,7 +92,7 @@ public class CandidateController {
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("download/{fileName}")
+	@GetMapping("/candidate/download/{fileName}")
 	ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable("fileName") String fileName)
 			throws IOException {
 		return documentService.getFile(fileName);

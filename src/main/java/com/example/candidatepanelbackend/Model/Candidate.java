@@ -52,12 +52,12 @@ public class Candidate  {
 	
 	private String joiningAvailability;
 	
-	private Date createDate;
+	private Date createdDate;
 	private Date modifiedDate;
 	
 	private String deleteFlag;
 	
-	private String createBy;
+	private String createdBy;
 	private String modifiedBy;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,12 +115,7 @@ public class Candidate  {
 		this.candidateStatus = candidateStatus;
 	}
 	
-	public Date getCreateDate() {
-		return createDate;
-	}
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+
 	
 	public Date getModifiedDate() {
 		return modifiedDate;
@@ -175,17 +170,24 @@ public class Candidate  {
 	public void setJoiningDate(Date joiningDate) {
 		this.joiningDate = joiningDate;
 	}
-	public String getCreateBy() {
-		return createBy;
-	}
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
-	}
+	
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 	

@@ -11,8 +11,8 @@ public final class Constants {
 	public static String InterviewRejected = "InterviewRejected";
 	public static String JOINED = "Joined";
 	public static String Rejected = "Rejected";
-	public static String Scheduled = "Scheduled";
-	public static String Selected = "Selected";
-	
+	public static String InterviewScheduled = "InterviewScheduled";
+	public static String Admin = "Admin";
+	public static String Y = "Y";
 	
 }

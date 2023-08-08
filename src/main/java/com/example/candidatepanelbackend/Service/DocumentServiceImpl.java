@@ -24,11 +24,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.candidatepanelbackend.Constants.Constants;
+import com.example.candidatepanelbackend.Enum.ResponseStatus;
+import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.DocumentStorageProperty;
 import com.example.candidatepanelbackend.Repo.DocumentRepository;
-
+import com.example.candidatepanelbackend.utils.ResponseBean;
 
 import jakarta.servlet.http.Part;
 
@@ -60,16 +63,15 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public Map<String, String> saveDocument(MultipartFile file, Integer id) {
+	public Map<String, String> saveDocument(MultipartFile file, Candidate candidate) {
 		DocumentDetails entity = new DocumentDetails();
 
 		if (file == null) {
 			logger.error("File not Found...");
 		}
-		entity.setModifiedDate(new Date());
-		entity.setCreateDate(new Date());
-		entity.setCandidateId(id);
-		entity.setName(file.getOriginalFilename());
+		
+		entity.setCandidateId(candidate);
+		entity.setFileName(file.getOriginalFilename());
 		try {
 			entity.setFileData(file.getBytes());
 		} catch (IOException e) {
@@ -91,7 +93,11 @@ public class DocumentServiceImpl implements DocumentService {
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		
+		entity.setModifiedDate(new Date());
+
+		entity.setCreatedDate(new Date());
+		entity.setCreatedBy(Constants.Admin);
+		entity.setModifiedBy(Constants.Admin);
 		// Save in DB
 		Map<String, String> response = new HashMap<>();
 		DocumentDetails save = repository.save(entity);
@@ -112,7 +118,7 @@ public class DocumentServiceImpl implements DocumentService {
 			logger.error("File not Found...");
 		}
 
-		entity.setName(file.getOriginalFilename());
+		entity.setFileName(file.getOriginalFilename());
 		try {
 			entity.setFileData(file.getBytes());
 		} catch (IOException e) {
@@ -175,7 +181,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 
 		DocumentDetails file = new DocumentDetails();
 
-		file.setName(uplodedFile.getOriginalFilename());
+		file.setFileName(uplodedFile.getOriginalFilename());
 		
 		try {
 			file.setFileData(uplodedFile.getBytes());
@@ -200,7 +206,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 	}
 	
 	
-	public DocumentDetilsModel getFile(Integer candidateId) {
+	public DocumentDetilsModel getFile(Long candidateId) {
 		
 		
 		DocumentDetails documents = repository.findByIdFile(candidateId);
@@ -209,9 +215,9 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		if (documents != null) {
 			documentModel.setId(documents.getId());
 			documentModel.setHash(documents.getHash());
-			documentModel.setName(documents.getName());
+			documentModel.setFileName(documents.getFileName());
 			documentModel.setSize(documents.getSize());
-			documentModel.setStatus(documents.getStatus());
+			
 			documentModel.setType(documents.getType());
 			documentModel.setFileData(documents.getFileData());
 		}
@@ -236,7 +242,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
         
 		String fileName = part.getSubmittedFileName();
 		
-		entity.setName(fileName);
+		entity.setFileName(fileName);
 		entity.setFileData(bytes);
 		entity.setType(contentType);
 		entity.setSize((double) DataSize.ofBytes((bytes.length)).toMegabytes());
@@ -294,7 +300,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		return response;
 	}
 
-	public DocumentDetails getDocument(Integer candidateId) {
+	public DocumentDetails getDocument(Long candidateId) {
 		
 		
 		DocumentDetails docuOptional = repository.findById(candidateId).get();
@@ -320,6 +326,50 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;File-Name=" + fileName);
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(filePath)))
 				.headers(httpHeaders).body(urlResource);
+	}
+
+	@Override
+	public ResponseBean editDocument(MultipartFile file, Long id) {
+		
+		DocumentDetails entity = repository.findByIdFile(id);
+
+		if (file == null) {
+			logger.error("File not Found...");
+		}
+
+//		entity.setCandidateId(id);
+		entity.setFileName(file.getOriginalFilename());
+		
+		try {
+			entity.setFileData(file.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		entity.setType(file.getContentType());
+		entity.setSize((double) (DataSize.ofBytes(file.getSize()).toMegabytes()));
+		entity.setDeleteFlag(null);
+
+		try {
+			entity.setHash();
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(e.getMessage());
+		}
+
+		// StoreDocument
+		try {
+			storeDocument(file, entity.getHash());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+		entity.setModifiedDate(new Date());
+		entity.setModifiedBy(Constants.Admin);
+		// Update in DB
+		DocumentDetails save = repository.save(entity);
+		if (save.getId() != null) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success  , "Candidate update succesfully");
+		} else {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error , "Please select the valid file type");
+		}
 	}
 
 

@@ -13,7 +13,7 @@ public class InterviewModel {
 	
 	private LocalDateTime schduleDateTime;
 	
-	private String employeeName;
+	private Employee employee;
 	
 	private String status;
 	
@@ -51,12 +51,14 @@ public class InterviewModel {
 		this.schduleDateTime = schduleDateTime;
 	}
 
-	public String getEmployeeName() {
-		return employeeName;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
+
+	
 	
 }

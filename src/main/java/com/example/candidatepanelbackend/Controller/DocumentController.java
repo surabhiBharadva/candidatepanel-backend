@@ -36,7 +36,7 @@ public class DocumentController {
 // bytes)
 
 	@GetMapping("/document/{id}")
-	private ResponseEntity<DocumentDetails> getDocument(@PathVariable Integer candidateId){
+	private ResponseEntity<DocumentDetails> getDocument(@PathVariable Long candidateId){
 		DocumentDetails candidateSave = documentService.getDocument(candidateId);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
 	}

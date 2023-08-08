@@ -14,11 +14,11 @@ import com.example.candidatepanelbackend.Model.DocumentDetails;
 @Repository
 @EnableJpaRepositories
 
-public interface DocumentRepository extends JpaRepository<DocumentDetails, Integer> {
+public interface DocumentRepository extends JpaRepository<DocumentDetails, Long> {
 	
 	
 	@Query(nativeQuery = true, value = "SELECT * FROM documentdetails WHERE candidateId =:candidate")
-	DocumentDetails findByIdFile(Integer candidate);
+	DocumentDetails findByIdFile(Long candidate);
 
 //	Optional<DocumentDetails> findByIdCandiDateId(Integer candidateId);
 

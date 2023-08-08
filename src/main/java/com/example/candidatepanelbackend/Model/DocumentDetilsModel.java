@@ -2,8 +2,8 @@ package com.example.candidatepanelbackend.Model;
 
 public class DocumentDetilsModel{
 	
-	private Integer id;
-	private String name;
+	private Long id;
+	private String fileName;
 	private String type;
 
 	private Double size;
@@ -13,24 +13,26 @@ public class DocumentDetilsModel{
 	
 	private byte[] fileData;
 
-	private Integer candidateId;
+	private Long candidateId;
 	
 	private Integer status;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	
+
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public String getType() {
@@ -65,11 +67,11 @@ public class DocumentDetilsModel{
 		this.fileData = fileData;
 	}
 
-	public Integer getCandidateId() {
+	public Long getCandidateId() {
 		return candidateId;
 	}
 
-	public void setCandidateId(Integer candidateId) {
+	public void setCandidateId(Long candidateId) {
 		this.candidateId = candidateId;
 	}
 

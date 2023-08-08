@@ -55,15 +55,15 @@ public class CandidateService {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,error,ResponseStatus.Error);
 		}
 		candidate.setCandidateStatus(Constants.UnderScreening);
-		candidate.setCreateDate(new Date());
-		candidate.setCreateBy("Admin");
-		candidate.setModifiedBy("Admin");
+		candidate.setCreatedDate(new Date());
+		candidate.setCreatedBy(Constants.Admin);
+		candidate.setModifiedBy(Constants.Admin);
 		candidate.setModifiedDate(new Date());
 		candidate.setApplicationDate(new Date());
 	
 		Candidate candidateObject = candidateRepo.save(candidate);
 		if(file != null) {
-			documentService.saveDocument(file,candidateObject.getId().intValue());
+			documentService.saveDocument(file,candidateObject);
 		}
 		
 		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,candidateObject, "Thank You For Applying to Nexscend Technologies");
@@ -102,7 +102,7 @@ public class CandidateService {
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
 			if (l.getId() != null) {
-				DocumentDetilsModel documentDetails = documentService.getFile(l.getId().intValue());
+				DocumentDetilsModel documentDetails = documentService.getFile(l.getId());
 				candidate.setDocumentDetails(documentDetails);
 			}
 			candidate.setFirstName(l.getFirstName());
@@ -124,7 +124,7 @@ public class CandidateService {
 		
 	}
 
-	public ResponseBean updateCandidate(Long id, Candidate candidate) {
+	public ResponseBean updateCandidate(Long id, Candidate candidate, MultipartFile file) {
 		String error = validateCheck(candidate);
 		if(!error.isEmpty()) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,error,ResponseStatus.Error);
@@ -139,15 +139,15 @@ public class CandidateService {
 		candidateSet.setPhoneNo(candidate.getPhoneNo());
 		candidateSet.setComment(candidate.getComment());
 		candidateSet.setJoiningDate(candidate.getJoiningDate());
-		candidateSet.setModifiedBy("Admin");
+	
 		candidateSet.setPosition(candidate.getPosition());
 		candidateSet.setResume(candidate.getResume());
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
 		if(candidateSet.getCandidateStatus().equals(Constants.Rejected) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
-			candidateSet.setDeleteFlag("Y");
+			candidateSet.setDeleteFlag(Constants.Y);
 		}
 		if (candidateSet.getCandidateStatus().equals(Constants.OfferAccepted)) {
-		Interview interview = interviewService.checkStatusSelected(candidate.getId());
+		Interview interview = interviewService.checkStatusSelected(id);
 			if (interview != null) {
 
 				Employee employee = new Employee();
@@ -155,21 +155,27 @@ public class CandidateService {
 				employee.setLastName(candidate.getLastName());
 				employee.setJoiningDate(candidate.getJoiningDate());
 				employee.setCreateDate(new Date());
+				employee.setCreateBy(Constants.Admin);
 				employee.setModifiedDate(new Date());
+				employee.setModifiedBy(Constants.Admin);
 				employee.setPhone(candidate.getPhoneNo());
 				employee.setEmail(candidate.getEmail());
 				employeeService.addEmployee(employee, null);
 			}else {
-				return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Interviewer Status in Selected",ResponseStatus.Error);
+				return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Interviewer Status Not Selected");
 			
 			}
 
 		}
+		candidateSet.setModifiedBy(Constants.Admin);
 		candidateSet.setSkills(candidate.getSkills());
 		candidateSet.setModifiedDate(new Date());
 		candidateSet.setJoiningAvailability(candidate.getJoiningAvailability());
 		
 		final Candidate candidateUpdate = candidateRepo.save(candidateSet);
+		if (file != null) {
+			return documentService.editDocument(file, id);
+		}
 		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,candidateUpdate, "Candidate Update Sucessfully to Nexscend Technologies");
 		
 	}

@@ -16,6 +16,7 @@ import com.example.candidatepanelbackend.Enum.StatusEnum;
 import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
+import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Repo.InterviewRepo;
@@ -35,12 +36,30 @@ public class InterviewService {
 
 	@Autowired
 	private DocumentService documentService;
+	@Autowired 
+	private EmployeeService employeeService;
+	
 
-	public Interview addInterview(Interview interview) {
-		interview.setCreateDate(new Date());
-		interview.setModifiedDate(new Date());
-		return interviewRepo.save(interview);
-		
+	public ResponseBean addInterview(Interview interview, Long candidateId, Long employeeId) {
+		try {
+			Candidate candidate = candidateService.getByIdCandidate(candidateId);
+			interview.setCandidate(candidate);
+			Employee employee = employeeService.getByIdEmployee(employeeId);
+
+			interview.setEmployee(employee);
+			interview.setStatus(Constants.InterviewScheduled);
+			interview.setCreatedDate(new Date());
+			interview.setCreatedBy(Constants.Admin);
+			interview.setModifiedDate(new Date());
+			interview.setModifiedBy(Constants.Admin);
+			Interview interviewSet = interviewRepo.save(interview);
+			candidateService.updateStatus(candidate.getId());
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewSet,
+					"Interview Schedule Add Successfully");
+		} catch (Exception e) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
+
+		}
 	}
 
 	public List<InterviewModel> getInterview() {
@@ -59,13 +78,13 @@ public class InterviewService {
 			candidateModel.setEmail(interview.getCandidate().getEmail());
 			candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
 			if (interview.getCandidate().getId() != null) {
-				DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId().intValue());
+				DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId());
 				candidateModel.setDocumentDetails(documentDetails);
 			}
 			interviewModel.setCandidate(candidateModel);
 		}
 			interviewModel.setStatus(interview.getStatus());
-			interviewModel.setEmployeeName(interview.getEmployeeName());
+			interviewModel.setEmployee(interview.getEmployee());
 			interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
 			interviewModel.setId(interview.getId());
 			
@@ -77,36 +96,40 @@ public class InterviewService {
 
 	public ResponseBean updateInterview(Long id, Interview interview) {
 		try {
-		Interview interviewSet = interviewRepo.findById(id).get();
-		if(interview.getStatus().equals(Constants.Selected)) {
-			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),true);
-		}
-		if(interview.getStatus().equals(Constants.Rejected)) {
-			candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(),false);
-		}
-		interviewSet.setModifiedDate(new Date());
-		interviewSet.setStatus(interview.getStatus());
-		interviewSet.setFeedback(interview.getFeedback());
+			Interview interviewSet = interviewRepo.findById(id).get();
+			if (interview.getStatus().equals(Constants.InterviewSelected)) {
+				candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(), true);
+			}
+			if (interview.getStatus().equals(Constants.InterviewRejected)) {
+				candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(), false);
+				interviewSet.setDeleteFlag(Constants.Y);
+				
+			}
+			interviewSet.setModifiedDate(new Date());
+			interviewSet.setModifiedBy(Constants.Admin);
 		
-		//interviewSet.setCandidate(interviewSet.getCandidate());
-		final Interview interviewUpdate = interviewRepo.save(interviewSet);
-		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,interviewUpdate, "Interview Schedule Update Successfully");
-		
-		}catch(Exception e) {
-			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,"Something went to wrong",ResponseStatus.Error);
-			
+			interviewSet.setStatus(interview.getStatus());
+			interviewSet.setFeedback(interview.getFeedback());
+
+			final Interview interviewUpdate = interviewRepo.save(interviewSet);
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+					"Interview Schedule Update Successfully");
+
+		} catch (Exception e) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
+
 		}
 		
 	}
 
 	public InterviewModel getByIdInterView(Long id) {
 		Interview interview = interviewRepo.findById(id).get();
-		Candidate candidate = candidateService.getByIdCandidate(interview.getCandidate().getId());
+		
 		CandidateModel candidateModel = new CandidateModel();
 		InterviewModel interviewModel = new InterviewModel();
-		candidateModel.setFirstName(candidate.getFirstName());
-		candidateModel.setLastName(candidate.getLastName());
-
+		candidateModel.setFirstName(interview.getCandidate().getFirstName());
+		candidateModel.setLastName(interview.getCandidate().getLastName());
+		candidateModel.setPosition(interview.getCandidate().getPosition());
 		interviewModel.setId(interview.getId());
 		interviewModel.setStatus(interview.getStatus());
 		interviewModel.setCandidate(candidateModel);
@@ -126,6 +149,28 @@ public class InterviewService {
 	public Interview getInterviewBycandidateId(Long candidateId) {
 		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
 		return interview;
+	}
+
+	public ResponseBean updateInterviewResuchdule(Interview interviewget, Long candidateId, Long interviewId,
+			Long employeeId) {
+		try {
+			Interview interview = getById(interviewId);
+
+			Candidate candidate = candidateService.getByIdCandidate(candidateId);
+			interview.setCandidate(candidate);
+			Employee employee = employeeService.getByIdEmployee(employeeId);
+			interview.setEmployee(employee);
+			interview.setStatus(Constants.InterviewScheduled);
+
+			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
+			interview.setModifiedDate(new Date());
+			final Interview interviewUpdate = interviewRepo.save(interview);
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+					"Interview ReScheduled Successfully");
+		} catch (Exception e) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
+
+		}
 	}
 	
 }

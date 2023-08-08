@@ -14,7 +14,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,84 +25,58 @@ public class DocumentDetails  {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private String name;
+	private Long id;
+	private String fileName;
 	private String type;
 
 	private Double size;
 
 	private String hash;
-	
 
 	@Lob
-    @Basic(fetch = FetchType.LAZY)
 	private byte[] fileData;
-	
 
-	public Integer candidateId;
-	
-	private Integer status;
-	private Date createDate;
+	@OneToOne
+	@JoinColumn(name = "candidateId")
+	private Candidate candidateId;
+
+//	private String candidateId;
+
+//	private Status status;
+
+	private Date createdDate;
+	private String createdBy;
 	private Date modifiedDate;
-	
-	private String createBy;
 	private String modifiedBy;
+
+	private String deleteFlag;
+
+	public static final int RADIX = 16;
+
 	
-	
-	
-	public Date getCreateDate() {
-		return createDate;
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public Date getModifiedDate() {
-		return modifiedDate;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
-	public String getCreateBy() {
-		return createBy;
-	}
-
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
+	public static int getRadix() {
+		return RADIX;
 	}
 
 	public void setHash(String hash) {
 		this.hash = hash;
-	}
-
-	public static final int RADIX = 16;
-	
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getType() {
@@ -119,18 +95,18 @@ public class DocumentDetails  {
 		this.fileData = fileData;
 	}
 
-	public Integer getCandidateId() {
+	public Candidate getCandidateId() {
 		return candidateId;
 	}
 
-	public void setCandidateId(Integer candidateId) {
+	public void setCandidateId(Candidate candidateId) {
 		this.candidateId = candidateId;
 	}
 
 	public String getHash() {
 		return hash;
 	}
-	
+
 	public Double getSize() {
 		return size;
 	}
@@ -140,26 +116,61 @@ public class DocumentDetails  {
 	}
 
 	public void setHash() throws NoSuchAlgorithmException {
-		String trasformedName = new StringBuilder().append(this.name).append(this.type).append(this.size)
+		String trasformedName = new StringBuilder().append(this.fileName).append(this.type).append(this.size)
 				.append(new Date().getTime()).toString();
-		
+
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		messageDigest.update(trasformedName.getBytes(StandardCharsets.UTF_8));
-		
+
 		this.hash = new BigInteger(1, messageDigest.digest()).toString(RADIX);
 	}
-	
-	public Integer getStatus() {
-		return status;
+
+	public String getDeleteFlag() {
+		return deleteFlag;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setDeleteFlag(String deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	@Override
 	public String toString() {
-		return "FileDetails [name=" + name + ", type=" + type + ", fileData=" + Arrays.toString(fileData)
-				+ ", candidateId=" + candidateId + "]";
+		return "DocumentDetails [id=" + id + ", fileName=" + fileName + ", type=" + type + ", size=" + size + ", hash="
+				+ hash + ", fileData=" + Arrays.toString(fileData) + ", candidateId=" + candidateId + ", createdDate="
+				+ createdDate + ", createdBy=" + createdBy + ", modifiedDate=" + modifiedDate + ", modifiedBy="
+				+ modifiedBy + ", deleteFlag=" + deleteFlag + "]";
 	}
+
 }
