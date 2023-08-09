@@ -171,6 +171,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 
 			Path targetLocation = this.fileLocation.resolve(hash);
 			Files.copy(file.getInputStream(), targetLocation);
+			Files.copy(file.getInputStream(), fileSaveLocation.resolve(file.getOriginalFilename()));
 		} else {
 			logger.info("File is not saved in local system, because not provided the path in property file");
 		}

@@ -45,7 +45,6 @@ public class InterviewService {
 			Candidate candidate = candidateService.getByIdCandidate(candidateId);
 			interview.setCandidate(candidate);
 			Employee employee = employeeService.getByIdEmployee(employeeId);
-
 			interview.setEmployee(employee);
 			interview.setStatus(Constants.InterviewScheduled);
 			interview.setCreatedDate(new Date());
@@ -66,32 +65,40 @@ public class InterviewService {
 		
 	  
 	   List<Interview> interviewList = interviewRepo.findTodayInterview();
-	   List<InterviewModel> interviewAdd = new ArrayList<InterviewModel>();
-		for(Interview interview : interviewList) {
-			InterviewModel interviewModel = new InterviewModel();
-			if(interview.getCandidate() != null && interview.getCandidate().getId() != null) {
-			
-			CandidateModel candidateModel = new CandidateModel(); 
-			candidateModel.setFirstName(interview.getCandidate().getFirstName());
-			candidateModel.setLastName(interview.getCandidate().getLastName());
-			candidateModel.setPosition(interview.getCandidate().getPosition());
-			candidateModel.setEmail(interview.getCandidate().getEmail());
-			candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
-			if (interview.getCandidate().getId() != null) {
-				DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId());
-				candidateModel.setDocumentDetails(documentDetails);
-			}
-			interviewModel.setCandidate(candidateModel);
-		}
-			interviewModel.setStatus(interview.getStatus());
-			interviewModel.setEmployee(interview.getEmployee());
-			interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
-			interviewModel.setId(interview.getId());
-			
-			
-			interviewAdd.add(interviewModel);
-		}
+	   List<InterviewModel> interviewAdd = getInterviewDetils(interviewList);
+	  
 		return interviewAdd;
+	}
+
+	private List<InterviewModel> getInterviewDetils(List<Interview> interviewList) {
+		 List<InterviewModel> interviewAdd = new ArrayList<InterviewModel>();
+			for(Interview interview : interviewList) {
+				InterviewModel interviewModel = new InterviewModel();
+				if(interview.getCandidate() != null && interview.getCandidate().getId() != null) {
+				
+				CandidateModel candidateModel = new CandidateModel(); 
+				candidateModel.setFirstName(interview.getCandidate().getFirstName());
+				candidateModel.setLastName(interview.getCandidate().getLastName());
+				candidateModel.setPosition(interview.getCandidate().getPosition());
+				candidateModel.setEmail(interview.getCandidate().getEmail());
+				candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
+				if (interview.getCandidate().getId() != null) {
+					DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId());
+					candidateModel.setDocumentDetails(documentDetails);
+				}
+				interviewModel.setCandidate(candidateModel);
+			}
+				interviewModel.setStatus(interview.getStatus());
+				interviewModel.setEmployee(interview.getEmployee());
+				interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
+				interviewModel.setId(interview.getId());
+				
+				
+				interviewAdd.add(interviewModel);
+			}
+			
+			return interviewAdd;
+		
 	}
 
 	public ResponseBean updateInterview(Long id, Interview interview) {
@@ -155,13 +162,26 @@ public class InterviewService {
 			Long employeeId) {
 		try {
 			Interview interview = getById(interviewId);
-
+			Integer conuter = interview.getInterviewCount();
+			if (conuter == null) {
+				conuter = 0;
+				conuter++;
+				interview.setInterviewCount(conuter);
+			} else {
+				if (conuter <= 2) {
+					conuter++;
+					interview.setInterviewCount(conuter);
+				} else {
+					return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error,
+							"Three times Reschedule Interview");
+				}
+			}
 			Candidate candidate = candidateService.getByIdCandidate(candidateId);
 			interview.setCandidate(candidate);
 			Employee employee = employeeService.getByIdEmployee(employeeId);
 			interview.setEmployee(employee);
 			interview.setStatus(Constants.InterviewScheduled);
-
+			
 			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
 			interview.setModifiedDate(new Date());
 			final Interview interviewUpdate = interviewRepo.save(interview);
@@ -172,5 +192,23 @@ public class InterviewService {
 
 		}
 	}
-	
+
+	public List<InterviewModel> getAllInterviewList() {
+		List<Interview> interviewList = interviewRepo.findAll();
+		List<InterviewModel> interviewAdd = getInterviewDetils(interviewList);
+		return interviewAdd;
+	}
+
+	public List<InterviewModel> getTommorowInterviewList() {
+		List<Interview> interviewList = interviewRepo.getTommorowInterviewList();
+		List<InterviewModel> interviewAdd = getInterviewDetils(interviewList);
+		return interviewAdd;
+	}
+
+	public List<InterviewModel> getPreviousInterviewList() {
+		List<Interview> interviewList = interviewRepo.getPreviousInterviewList();
+		List<InterviewModel> interviewAdd = getInterviewDetils(interviewList);
+		return interviewAdd;
+	}
+
 }

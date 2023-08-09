@@ -87,11 +87,6 @@ public class CandidateService {
 		if (value) {
 			error += "Candidate Email is missing," + " ";
 		}
-
-		if (validationUtils.checkVeladationString(candidate.getResume())) {
-			error += "Candidate File Upload is missing," + " ";
-		}
-
 		return error;
 	}
 
@@ -141,7 +136,7 @@ public class CandidateService {
 		candidateSet.setJoiningDate(candidate.getJoiningDate());
 	
 		candidateSet.setPosition(candidate.getPosition());
-		candidateSet.setResume(candidate.getResume());
+		
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
 		if(candidateSet.getCandidateStatus().equals(Constants.Rejected) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
 			candidateSet.setDeleteFlag(Constants.Y);
@@ -209,6 +204,29 @@ public class CandidateService {
 		} else {
 			candidateRepo.updateStatusCandidateRejected(id);
 		}
+	}
+
+	public CandidateModel getByIdCandidateWithDocumentDeitals(Long id) {
+		Candidate candidate = candidateRepo.findById(id).get();
+		CandidateModel candidateModel = new CandidateModel();
+		candidateModel.setId(candidate.getId());
+		candidateModel.setFirstName(candidate.getFirstName());
+		candidateModel.setLastName(candidate.getLastName());
+		candidateModel.setPosition(candidateModel.getPosition());
+		candidateModel.setComment(candidate.getComment());
+		candidateModel.setJoiningAvailability(candidate.getJoiningAvailability());
+		candidateModel.setEmail(candidate.getEmail());
+		candidateModel.setPhoneNo(candidate.getPhoneNo());
+		candidateModel.setCandidateStatus(candidate.getCandidateStatus());
+		candidateModel.setApplicationDate(candidate.getApplicationDate());
+		candidateModel.setPosition(candidate.getPosition());
+		candidateModel.setSkills(candidate.getSkills());
+		if (candidate.getId() != null) {
+			DocumentDetilsModel documentDetails = documentService.getFile(candidate.getId());
+			candidateModel.setDocumentDetails(documentDetails);
+		}
+		return candidateModel;
+		
 	}
 
 }

@@ -38,10 +38,7 @@ public class Candidate  {
 	private String email;
 	private Long phoneNo;
 	private String skills;
-	
-	@Transient
-	private String resume;
-	
+
 	
 	private String candidateStatus; 
 	
@@ -148,12 +145,7 @@ public class Candidate  {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	public String getResume() {
-		return resume;
-	}
-	public void setResume(String resume) {
-		this.resume = resume;
-	}
+
 
 	public String getJoiningAvailability() {
 		return joiningAvailability;

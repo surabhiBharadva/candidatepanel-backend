@@ -87,8 +87,8 @@ public class CandidateController {
 	}
 
 	@GetMapping("/candidate/{id}")
-	private ResponseEntity<Candidate> getByIdCandidate(@PathVariable Long id) {
-		Candidate candidateSave = candidateService.getByIdCandidate(id);
+	private ResponseEntity<CandidateModel> getByIdCandidate(@PathVariable Long id) {
+		CandidateModel candidateSave = candidateService.getByIdCandidateWithDocumentDeitals(id);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
 	}
 	

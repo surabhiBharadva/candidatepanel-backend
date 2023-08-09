@@ -13,7 +13,7 @@ import com.example.candidatepanelbackend.Model.Interview;
 @Repository
 public interface InterviewRepo extends JpaRepository<Interview,Long> {
 
-	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE status='InterviewScheduled' and DATE(schduleDateTime) = CURDATE()")
+	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE status='InterviewScheduled' and DATE(schduleDateTime) = CURDATE() or DATE(schduleDateTime) < CURDATE()")
 	List<Interview> findTodayInterview();
 	
 	
@@ -22,6 +22,12 @@ public interface InterviewRepo extends JpaRepository<Interview,Long> {
 
 	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE candidateId =:candidateId")
 	Interview getInterviewBycandidateId(Long candidateId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM interview where DATE(schduleDateTime) > CURDATE()")
+	List<Interview> getTommorowInterviewList();
+
+	@Query(nativeQuery = true, value = "SELECT * FROM interview where DATE(schduleDateTime) < CURDATE()")
+	List<Interview> getPreviousInterviewList();
 	
 	
 }

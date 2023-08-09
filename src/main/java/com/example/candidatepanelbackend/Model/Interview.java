@@ -49,6 +49,8 @@ public class Interview implements Serializable {
 	@JoinColumn(name = "employeeId",unique=false)
 	private Employee employee;
 	
+	private Integer interviewCount;
+	
 	private Date createdDate;
 	private String createdBy;
 	private Date modifiedDate;
@@ -154,6 +156,14 @@ public class Interview implements Serializable {
 
 	public void setDeleteFlag(String deleteFlag) {
 		this.deleteFlag = deleteFlag;
+	}
+
+	public Integer getInterviewCount() {
+		return interviewCount;
+	}
+
+	public void setInterviewCount(Integer interviewCount) {
+		this.interviewCount = interviewCount;
 	}
 	
 	

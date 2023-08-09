@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.candidatepanelbackend.Enum.ResponseStatus;
+import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
 import com.example.candidatepanelbackend.Service.InterviewService;
@@ -35,7 +36,7 @@ public class InterviewController {
 			@PathVariable Long employeeId) {
 
 		try {
-
+			
 			return interviewService.addInterview(interview, candidateId, employeeId);
 
 		} catch (Exception e) {
@@ -92,5 +93,27 @@ public class InterviewController {
 		Interview interviewget = interviewService.getInterviewBycandidateId(candidateId);
 		return new ResponseEntity<>(interviewget, HttpStatus.CREATED);
 	}
+	
+	@GetMapping("/interview/allInterviewList")
+	private ResponseEntity<List<InterviewModel>> getAllInterviewList() {
 
+		List<InterviewModel> interview = interviewService.getAllInterviewList();
+		return new ResponseEntity<>(interview, HttpStatus.OK);
+	}
+	
+	@GetMapping("/interview/tommorowInterviewList")
+	private ResponseEntity<List<InterviewModel>> getTommorowInterviewList() {
+
+		List<InterviewModel> interview = interviewService.getTommorowInterviewList();
+		return new ResponseEntity<>(interview, HttpStatus.OK);
+	}
+	
+	@GetMapping("/interview/previousInterviewList")
+	private ResponseEntity<List<InterviewModel>> getPreviousInterviewList() {
+
+		List<InterviewModel> interview = interviewService.getPreviousInterviewList();
+		return new ResponseEntity<>(interview, HttpStatus.OK);
+	}
+	
+	
 }
