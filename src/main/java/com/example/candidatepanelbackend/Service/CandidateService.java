@@ -138,7 +138,7 @@ public class CandidateService {
 		candidateSet.setPosition(candidate.getPosition());
 		
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
-		if(candidateSet.getCandidateStatus().equals(Constants.Rejected) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
+		if(candidateSet.getCandidateStatus().equals(Constants.RejectedCancelled) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
 			candidateSet.setDeleteFlag(Constants.Y);
 		}
 		if (candidateSet.getCandidateStatus().equals(Constants.OfferAccepted)) {
@@ -212,7 +212,7 @@ public class CandidateService {
 		candidateModel.setId(candidate.getId());
 		candidateModel.setFirstName(candidate.getFirstName());
 		candidateModel.setLastName(candidate.getLastName());
-		candidateModel.setPosition(candidateModel.getPosition());
+		candidateModel.setPosition(candidate.getPosition());
 		candidateModel.setComment(candidate.getComment());
 		candidateModel.setJoiningAvailability(candidate.getJoiningAvailability());
 		candidateModel.setEmail(candidate.getEmail());
@@ -221,12 +221,23 @@ public class CandidateService {
 		candidateModel.setApplicationDate(candidate.getApplicationDate());
 		candidateModel.setPosition(candidate.getPosition());
 		candidateModel.setSkills(candidate.getSkills());
+		candidateModel.setCreatedDate(candidate.getCreatedDate());
+		candidateModel.setCreatedBy(candidate.getCreatedBy());
+		candidateModel.setModifiedBy(candidate.getModifiedBy());
+		candidateModel.setModifiedDate(candidate.getModifiedDate());
 		if (candidate.getId() != null) {
 			DocumentDetilsModel documentDetails = documentService.getFile(candidate.getId());
 			candidateModel.setDocumentDetails(documentDetails);
 		}
 		return candidateModel;
 		
+	}
+
+	public void updateStatusCandidateReschduleInerview(Long id, boolean update) {
+		
+		if (update) {
+			candidateRepo.updateStatusCandidateReschduleInerview(id);
+		}
 	}
 
 }

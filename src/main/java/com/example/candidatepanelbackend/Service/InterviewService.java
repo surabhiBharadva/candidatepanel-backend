@@ -82,12 +82,14 @@ public class InterviewService {
 				candidateModel.setPosition(interview.getCandidate().getPosition());
 				candidateModel.setEmail(interview.getCandidate().getEmail());
 				candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
+				
 				if (interview.getCandidate().getId() != null) {
 					DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId());
 					candidateModel.setDocumentDetails(documentDetails);
 				}
 				interviewModel.setCandidate(candidateModel);
 			}
+				interviewModel.setModifiedBy(interview.getModifiedBy());
 				interviewModel.setStatus(interview.getStatus());
 				interviewModel.setEmployee(interview.getEmployee());
 				interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
@@ -137,6 +139,8 @@ public class InterviewService {
 		candidateModel.setFirstName(interview.getCandidate().getFirstName());
 		candidateModel.setLastName(interview.getCandidate().getLastName());
 		candidateModel.setPosition(interview.getCandidate().getPosition());
+		candidateModel.setEmail(interview.getCandidate().getEmail());
+		candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
 		interviewModel.setId(interview.getId());
 		interviewModel.setStatus(interview.getStatus());
 		interviewModel.setCandidate(candidateModel);
@@ -168,22 +172,20 @@ public class InterviewService {
 				conuter++;
 				interview.setInterviewCount(conuter);
 			} else {
-				if (conuter <= 2) {
-					conuter++;
-					interview.setInterviewCount(conuter);
-				} else {
-					return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error,
-							"Three times Reschedule Interview");
-				}
+
+				conuter++;
+				interview.setInterviewCount(conuter);
+
 			}
 			Candidate candidate = candidateService.getByIdCandidate(candidateId);
 			interview.setCandidate(candidate);
 			Employee employee = employeeService.getByIdEmployee(employeeId);
 			interview.setEmployee(employee);
-			interview.setStatus(Constants.InterviewScheduled);
+			interview.setStatus(Constants.InterviewRescheduled);
 			
 			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
 			interview.setModifiedDate(new Date());
+			candidateService.updateStatusCandidateReschduleInerview(interview.getCandidate().getId(),true);
 			final Interview interviewUpdate = interviewRepo.save(interview);
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
 					"Interview ReScheduled Successfully");

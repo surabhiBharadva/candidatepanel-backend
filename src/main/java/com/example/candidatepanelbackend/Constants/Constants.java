@@ -10,8 +10,10 @@ public final class Constants {
 	public static String InterviewSelected = "InterviewSelected";
 	public static String InterviewRejected = "InterviewRejected";
 	public static String JOINED = "Joined";
-	public static String Rejected = "Rejected";
+	public static String RejectedCancelled = "RejectedCancelled";
 	public static String InterviewScheduled = "InterviewScheduled";
+	public static String InterviewRescheduled="InterviewRescheduled";
+	public static String InterviewCancelled="InterviewCancelled";
 	public static String Admin = "Admin";
 	public static String Y = "Y";
 	

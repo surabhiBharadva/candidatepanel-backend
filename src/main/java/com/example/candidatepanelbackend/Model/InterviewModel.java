@@ -16,6 +16,7 @@ public class InterviewModel {
 	private Employee employee;
 	
 	private String status;
+	private String modifiedBy;
 	
 	public String getStatus() {
 		return status;
@@ -57,6 +58,14 @@ public class InterviewModel {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	

@@ -13,7 +13,7 @@ import com.example.candidatepanelbackend.Model.Interview;
 @Repository
 public interface InterviewRepo extends JpaRepository<Interview,Long> {
 
-	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE status='InterviewScheduled' and DATE(schduleDateTime) = CURDATE() or DATE(schduleDateTime) < CURDATE()")
+	@Query(nativeQuery = true, value = "SELECT * FROM interview WHERE (DATE(schduleDateTime) = CURDATE()) or (DATE(schduleDateTime) < CURDATE() and status='InterviewScheduled') order by schduleDateTime ASC")
 	List<Interview> findTodayInterview();
 	
 	
