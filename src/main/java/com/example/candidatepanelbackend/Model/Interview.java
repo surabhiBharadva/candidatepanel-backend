@@ -1,24 +1,20 @@
 package com.example.candidatepanelbackend.Model;
 
-import java.io.Serializable;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.example.candidatepanelbackend.Enum.StatusEnum;
-import com.example.candidatepanelbackend.Model.Candidate;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,16 +23,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interview implements Serializable {
+public class Interview  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private LocalDateTime schduleDateTime;
-	
-	private String employeeName;
-	
-	
+		
 	private String status;
 
 	private String feedback;
@@ -96,14 +89,6 @@ public class Interview implements Serializable {
 
 	public void setSchduleDateTime(LocalDateTime schduleDateTime) {
 		this.schduleDateTime = schduleDateTime;
-	}
-
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
 	}
 
 	public String getFeedback() {

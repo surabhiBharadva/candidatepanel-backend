@@ -2,7 +2,6 @@ package com.example.candidatepanelbackend.Model;
 
 import java.util.Date;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,22 +14,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class EducationDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String universityName;
+	private String courseName;
+	private String branch;
+	private Double CGPAOrPercentage;
+	private Integer passingYear;
 
-	private String streetLine1;
-	private String streetLine2;
-	private String city;
-	private String state;
-	private Integer pinCode;
-	private String addressType;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "employeeId")
-	private Employee employeeId;
+	@ManyToOne 
+	@JoinColumn(name="empId")
+	private Employee empId;
 
 	private Date createdDate;
 	private String createdBy;
@@ -46,60 +43,52 @@ public class Address {
 		this.id = id;
 	}
 
-	public String getStreetLine1() {
-		return streetLine1;
+	public String getUniversityName() {
+		return universityName;
 	}
 
-	public void setStreetLine1(String streetLine1) {
-		this.streetLine1 = streetLine1;
+	public void setUniversityName(String universityName) {
+		this.universityName = universityName;
 	}
 
-	public String getStreetLine2() {
-		return streetLine2;
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public void setStreetLine2(String streetLine2) {
-		this.streetLine2 = streetLine2;
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
-	public String getCity() {
-		return city;
+	public String getBranch() {
+		return branch;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setBranch(String branch) {
+		this.branch = branch;
 	}
 
-	public String getState() {
-		return state;
+	public Double getCGPAOrPercentage() {
+		return CGPAOrPercentage;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setCGPAOrPercentage(Double cGPAOrPercentage) {
+		CGPAOrPercentage = cGPAOrPercentage;
 	}
 
-	public Integer getPinCode() {
-		return pinCode;
+	public Integer getPassingYear() {
+		return passingYear;
 	}
 
-	public void setPinCode(Integer pinCode) {
-		this.pinCode = pinCode;
+	public void setPassingYear(Integer passingYear) {
+		this.passingYear = passingYear;
 	}
 
-	public String getAddressType() {
-		return addressType;
+	public Employee getEmpId() {
+		return empId;
 	}
 
-	public void setAddressType(String addressType) {
-		this.addressType = addressType;
-	}
-
-	public Employee getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Employee employeeId) {
-		this.employeeId = employeeId;
+	public void setEmpId(Employee empId) {
+		this.empId = empId;
 	}
 
 	public Date getCreatedDate() {
@@ -144,10 +133,11 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", streetLine1=" + streetLine1 + ", streetLine2=" + streetLine2 + ", city=" + city
-				+ ", state=" + state + ", pinCode=" + pinCode + ", addressType=" + addressType + ", employeeId="
-				+ employeeId + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", modifiedDate="
+		return "EducationDetails [id=" + id + ", universityName=" + universityName + ", courseName=" + courseName
+				+ ", branch=" + branch + ", CGPAOrPercentage=" + CGPAOrPercentage + ", passingYear=" + passingYear
+				+ ", empId=" + empId + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", modifiedDate="
 				+ modifiedDate + ", modifiedBy=" + modifiedBy + ", deleteFlag=" + deleteFlag + "]";
 	}
 
+	
 }

@@ -18,6 +18,7 @@ import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.CandidateModel;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Employee;
+import com.example.candidatepanelbackend.Model.EmployeeModel;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Repo.CandidateRepo;
 import com.example.candidatepanelbackend.utils.ResponseBean;
@@ -145,15 +146,16 @@ public class CandidateService {
 		Interview interview = interviewService.checkStatusSelected(id);
 			if (interview != null) {
 
-				Employee employee = new Employee();
+				EmployeeModel  employee = new EmployeeModel();
 				employee.setFirstName(candidate.getFirstName());
 				employee.setLastName(candidate.getLastName());
-				employee.setJoiningDate(candidate.getJoiningDate());
-				employee.setCreateDate(new Date());
-				employee.setCreateBy(Constants.Admin);
-				employee.setModifiedDate(new Date());
-				employee.setModifiedBy(Constants.Admin);
-				employee.setPhone(candidate.getPhoneNo());
+				/*
+				 * employee.setJoiningDate(candidate.getJoiningDate());
+				 * employee.setCreatedDate(new Date()); employee.setCreatedBy(Constants.Admin);
+				 * employee.setModifiedDate(new Date());
+				 * employee.setModifiedBy(Constants.Admin);
+				 */
+				employee.setPhoneNo(candidate.getPhoneNo());
 				employee.setEmail(candidate.getEmail());
 				employeeService.addEmployee(employee, null);
 			}else {
@@ -225,6 +227,7 @@ public class CandidateService {
 		candidateModel.setCreatedBy(candidate.getCreatedBy());
 		candidateModel.setModifiedBy(candidate.getModifiedBy());
 		candidateModel.setModifiedDate(candidate.getModifiedDate());
+		candidateModel.setJoiningDate(candidate.getJoiningDate());
 		if (candidate.getId() != null) {
 			DocumentDetilsModel documentDetails = documentService.getFile(candidate.getId());
 			candidateModel.setDocumentDetails(documentDetails);

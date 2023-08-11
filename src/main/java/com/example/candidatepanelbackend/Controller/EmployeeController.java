@@ -1,9 +1,7 @@
 package com.example.candidatepanelbackend.Controller;
 
 import java.util.List;
-
-
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,57 +10,68 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.candidatepanelbackend.Model.Employee;
+import com.example.candidatepanelbackend.Model.EmployeeModel;
 import com.example.candidatepanelbackend.Service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/")
-public class EmployeeController{
-	
+@RequestMapping("api/v1/employee")
+public class EmployeeController {
+
 	@Autowired
-	private EmployeeService empoService;
-	
+	private EmployeeService employeeService;
+
 	@Autowired
 	ObjectMapper mapper;
-	
-	@PostMapping("/employee")
-	private ResponseEntity<Employee> saveCandidate(@RequestBody Employee employee) throws JsonMappingException, JsonProcessingException {
-	
-		Employee employeeData =  empoService.addEmployee(employee, null);
-		 
-		return new ResponseEntity<>(employeeData, HttpStatus.CREATED);
+
+	Map<String, String> map;
+
+	@PostMapping("/save")
+	public ResponseEntity<Object> saveEmployee(@RequestParam("files") MultipartFile[] files,
+			@RequestParam("employee") String model) {
+
+//		EmployeeModel data = new EmployeeModel();
+//		Map<String, String> employee = null;
+
+		try {
+			EmployeeModel data = mapper.readValue(model, EmployeeModel.class);
+			map = employeeService.addEmployee(data, files);
+
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(map);
 	}
-	
-	@GetMapping("/employee")
-	private ResponseEntity<List<Employee>> getEmplyeeName(){
-		
-		List<Employee> list = empoService.getEmployeeName();
+
+	@GetMapping("/getAll")
+	private ResponseEntity<List<Employee>> getEmplyeeName() {
+
+		List<Employee> list = employeeService.getEmployeeName();
 		return new ResponseEntity<>(list, HttpStatus.CREATED);
 	}
-	
-	@GetMapping("/employee/{id}")
-	private ResponseEntity<Employee> getByIdEmployee(@PathVariable Long id){
-		Employee employeeObj = empoService.getByIdEmployee(id);
+
+	@GetMapping("/getById/{id}")
+	private ResponseEntity<Employee> getByIdEmployee(@PathVariable Long id) {
+		Employee employeeObj = employeeService.getByIdEmployee(id);
 		return new ResponseEntity<>(employeeObj, HttpStatus.CREATED);
 	}
-	
-	@PutMapping("/employee/{id}")
-	private ResponseEntity<Employee> updateCandidate(@PathVariable Long id,@RequestBody Employee employee){
-		Employee employeeUpdate = empoService.updateCandidate(id ,employee);
-		return new ResponseEntity<>(employeeUpdate, HttpStatus.CREATED);
-	}
-	
+
+//	@PutMapping("/employee/{id}")
+//	private ResponseEntity<Employee> updateCandidate(@PathVariable Long id,@RequestBody Employee employee){
+//		Employee employeeUpdate = empoService.updateCandidate(id ,employee);
+//		return new ResponseEntity<>(employeeUpdate, HttpStatus.CREATED);
+//	}
+
 }

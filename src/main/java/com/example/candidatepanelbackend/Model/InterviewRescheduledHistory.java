@@ -24,10 +24,24 @@ public class InterviewRescheduledHistory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	
+	private Long interviewId;
+	
+	private LocalDateTime schduleDateTime;
+		
+	private String status;
+
+	private String feedback;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "candidateId",unique=false)
-	private Interview interview;
-
+	private Candidate candidate;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employeeId",unique=false)
+	private Employee employee;
+	
+	private Integer interviewCount;
 	
 	private Date createdDate;
 	private String createdBy;
@@ -72,11 +86,48 @@ public class InterviewRescheduledHistory {
 	public void setDeleteFlag(String deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
-	public Interview getInterview() {
-		return interview;
+	
+	public LocalDateTime getSchduleDateTime() {
+		return schduleDateTime;
 	}
-	public void setInterview(Interview interview) {
-		this.interview = interview;
+	public void setSchduleDateTime(LocalDateTime schduleDateTime) {
+		this.schduleDateTime = schduleDateTime;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getFeedback() {
+		return feedback;
+	}
+	public void setFeedback(String feedback) {
+		this.feedback = feedback;
+	}
+	public Candidate getCandidate() {
+		return candidate;
+	}
+	public void setCandidate(Candidate candidate) {
+		this.candidate = candidate;
+	}
+	public Employee getEmployee() {
+		return employee;
+	}
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+	public Integer getInterviewCount() {
+		return interviewCount;
+	}
+	public void setInterviewCount(Integer interviewCount) {
+		this.interviewCount = interviewCount;
+	}
+	public Long getInterviewId() {
+		return interviewId;
+	}
+	public void setInterviewId(Long interviewId) {
+		this.interviewId = interviewId;
 	}
 	
 	

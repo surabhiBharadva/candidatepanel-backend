@@ -1,20 +1,19 @@
 package com.example.candidatepanelbackend.Model;
 
-public class DocumentDetilsModel{
-	
+public class DocumentDetilsModel {
+
 	private Long id;
 	private String fileName;
-	private String type;
+	private String filetype;
 
 	private Double size;
 
 	private String hash;
 
-	
 	private byte[] fileData;
 
 	private Long candidateId;
-	
+
 	private Integer status;
 
 	public Long getId() {
@@ -25,8 +24,6 @@ public class DocumentDetilsModel{
 		this.id = id;
 	}
 
-	
-
 	public String getFileName() {
 		return fileName;
 	}
@@ -35,12 +32,12 @@ public class DocumentDetilsModel{
 		this.fileName = fileName;
 	}
 
-	public String getType() {
-		return type;
+	public String getFiletype() {
+		return filetype;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setFiletype(String filetype) {
+		this.filetype = filetype;
 	}
 
 	public Double getSize() {
@@ -82,7 +79,5 @@ public class DocumentDetilsModel{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
-	
-	
+
 }

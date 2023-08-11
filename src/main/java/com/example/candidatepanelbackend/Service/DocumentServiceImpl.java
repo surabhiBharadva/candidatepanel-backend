@@ -30,6 +30,7 @@ import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.DocumentStorageProperty;
+import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Repo.DocumentRepository;
 import com.example.candidatepanelbackend.utils.ResponseBean;
 
@@ -37,18 +38,16 @@ import jakarta.servlet.http.Part;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
-	
+
 	Logger logger = LoggerFactory.getLogger(DocumentServiceImpl.class);
 
 	private final Path fileLocation;
-	
+
 	private final Path fileSaveLocation;
 
-	
-	
 	@Autowired
 	DocumentRepository repository;
-	
+
 	@Autowired
 	public DocumentServiceImpl(DocumentStorageProperty documentStorageProperty) {
 		this.fileLocation = Paths.get(documentStorageProperty.getUploadDirectory()).toAbsolutePath().normalize();
@@ -63,53 +62,56 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public Map<String, String> saveDocument(MultipartFile file, Candidate candidate) {
+	public Map<String, String> saveDocument(MultipartFile file, Employee employee) {
 		DocumentDetails entity = new DocumentDetails();
 
 		if (file == null) {
 			logger.error("File not Found...");
 		}
-		
-		entity.setCandidateId(candidate);
+
+		entity.setEmployeeId(employee);
 		entity.setFileName(file.getOriginalFilename());
 		try {
 			entity.setFileData(file.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		entity.setType(file.getContentType());
-		entity.setSize((double)(DataSize.ofBytes(file.getSize()).toMegabytes()));
-		//entity.setStatus(Status.ACTIVE.getStatusValue());
+		entity.setFileType(file.getContentType());
+		entity.setSize((double) (DataSize.ofBytes(file.getSize()).toMegabytes()));
 		
+		entity.setDocumentType(employee.getDocumentType());
+
 		try {
 			entity.setHash();
 		} catch (NoSuchAlgorithmException e) {
 			logger.error(e.getMessage());
 		}
-		
-		//StoreDocument
+
+		// StoreDocument
 		try {
 			storeDocument(file, entity.getHash());
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		entity.setModifiedDate(new Date());
 
+		entity.setModifiedDate(new Date());
 		entity.setCreatedDate(new Date());
 		entity.setCreatedBy(Constants.Admin);
 		entity.setModifiedBy(Constants.Admin);
+
 		// Save in DB
 		Map<String, String> response = new HashMap<>();
 		DocumentDetails save = repository.save(entity);
-		if(save.getId() != null) {
+
+		if (save.getId() != null) {
 			response.put("response", "Thank You For Applying to Nexscend Technologies");
-		}else {
+		} else {
 			response.put("response", "Please select the valid file type");
 		}
-	    
+
 		return response;
 	}
-	
+
 	@Override
 	public Map<String, String> saveDocument(MultipartFile file) {
 		DocumentDetails entity = new DocumentDetails();
@@ -124,36 +126,37 @@ public class DocumentServiceImpl implements DocumentService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		entity.setType(file.getContentType());
-		entity.setSize((double)(DataSize.ofBytes(file.getSize()).toMegabytes()));
-		//entity.setStatus(Status.ACTIVE.getStatusValue());
-		
+		entity.setFileType(file.getContentType());
+		entity.setSize((double) (DataSize.ofBytes(file.getSize()).toMegabytes()));
+		// entity.setStatus(Status.ACTIVE.getStatusValue());
+
 		try {
 			entity.setHash();
 		} catch (NoSuchAlgorithmException e) {
 			logger.error(e.getMessage());
 		}
-		
-		//StoreDocument
+
+		// StoreDocument
 		try {
 			storeDocument(file, entity.getHash());
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		
+
 		// Save in DB
 		Map<String, String> response = new HashMap<>();
 		DocumentDetails save = repository.save(entity);
-		if(save.getId() != null) {
+		if (save.getId() != null) {
 			response.put("response", "Thank You For Applying to Nexscend Technologies");
-		}else {
+		} else {
 			response.put("response", "Please select the valid file type");
 		}
-	    
+
 		return response;
 	}
+
 	private void storeDocument(InputStream inputStream, String hash) throws IOException {
-		
+
 		if (this.fileLocation != null) {
 			logger.info("File save at Location " + this.fileLocation);
 
@@ -163,15 +166,14 @@ public class DocumentServiceImpl implements DocumentService {
 			logger.info("File is not saved in local system, because not provided the path in property file");
 		}
 	}
-	
-private void storeDocument(MultipartFile file, String hash) throws IOException {
-		
+
+	private void storeDocument(MultipartFile file, String hash) throws IOException {
+
 		if (this.fileLocation != null) {
 			logger.info("File save at Location " + this.fileLocation);
 
 			Path targetLocation = this.fileLocation.resolve(hash);
 			Files.copy(file.getInputStream(), targetLocation);
-			Files.copy(file.getInputStream(), fileSaveLocation.resolve(file.getOriginalFilename()));
 		} else {
 			logger.info("File is not saved in local system, because not provided the path in property file");
 		}
@@ -183,33 +185,31 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		DocumentDetails file = new DocumentDetails();
 
 		file.setFileName(uplodedFile.getOriginalFilename());
-		
+
 		try {
 			file.setFileData(uplodedFile.getBytes());
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		
-		file.setType(uplodedFile.getContentType());
+
+		file.setFileType(uplodedFile.getContentType());
 
 		// Save in DB
 		Map<String, String> response = new HashMap<>();
 		DocumentDetails save = repository.save(file);
-		
-		if(save.getId() != null) {
+
+		if (save.getId() != null) {
 			response.put("response", "File Uploded Succesfully");
-		}else {
+		} else {
 			response.put("response", "Data base  connections issue found");
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-	    
+
 		return response;
 	}
-	
-	
+
 	public DocumentDetilsModel getFile(Long candidateId) {
-		
-		
+
 		DocumentDetails documents = repository.findByIdFile(candidateId);
 		DocumentDetilsModel documentModel = new DocumentDetilsModel();
 
@@ -218,36 +218,37 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 			documentModel.setHash(documents.getHash());
 			documentModel.setFileName(documents.getFileName());
 			documentModel.setSize(documents.getSize());
-			
-			documentModel.setType(documents.getType());
+
+			documentModel.setFiletype(documents.getFileType());
 			documentModel.setFileData(documents.getFileData());
 		}
 		return documentModel;
 	}
 
 	@Override
-	public Map<String, String> saveDocument(Part part,InputStream inputStream, String contentType, Integer contentLength) {
+	public Map<String, String> saveDocument(Part part, InputStream inputStream, String contentType,
+			Integer contentLength) {
 		DocumentDetails entity = new DocumentDetails();
-		
+
 		byte[] bytes = new byte[contentLength];
 		int data;
 		int i = 0;
-        try {
+		try {
 			while ((data = inputStream.read()) != -1) {
-					bytes[i] = (byte) data;
-					i++;
+				bytes[i] = (byte) data;
+				i++;
 			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
-        
+
 		String fileName = part.getSubmittedFileName();
-		
+
 		entity.setFileName(fileName);
 		entity.setFileData(bytes);
-		entity.setType(contentType);
+		entity.setFileType(contentType);
 		entity.setSize((double) DataSize.ofBytes((bytes.length)).toMegabytes());
-		//entity.setStatus(Status.ACTIVE.getStatusValue());
+		// entity.setStatus(Status.ACTIVE.getStatusValue());
 
 		try {
 			entity.setHash();
@@ -289,7 +290,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 	public Map<String, String> saveDocument(byte[] fileBytes) {
 		DocumentDetails entity = new DocumentDetails();
 		entity.setFileData(fileBytes);
-		
+
 		Map<String, String> response = new HashMap<>();
 		DocumentDetails save = repository.save(entity);
 		if (save.getId() != null) {
@@ -297,17 +298,17 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		} else {
 			response.put("response", "Please select the valid file type");
 		}
-		
+
 		return response;
 	}
 
 	public DocumentDetails getDocument(Long candidateId) {
-		
-		
+
 		DocumentDetails docuOptional = repository.findById(candidateId).get();
 		return docuOptional;
-		
+
 	}
+
 	@Override
 	public ResponseEntity<Resource> getFile(String fileName) throws IOException {
 
@@ -331,7 +332,7 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 
 	@Override
 	public ResponseBean editDocument(MultipartFile file, Long id) {
-		
+
 		DocumentDetails entity = repository.findByIdFile(id);
 
 		if (file == null) {
@@ -340,13 +341,13 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 
 //		entity.setCandidateId(id);
 		entity.setFileName(file.getOriginalFilename());
-		
+
 		try {
 			entity.setFileData(file.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		entity.setType(file.getContentType());
+		entity.setFileType(file.getContentType());
 		entity.setSize((double) (DataSize.ofBytes(file.getSize()).toMegabytes()));
 		entity.setDeleteFlag(null);
 
@@ -367,12 +368,24 @@ private void storeDocument(MultipartFile file, String hash) throws IOException {
 		// Update in DB
 		DocumentDetails save = repository.save(entity);
 		if (save.getId() != null) {
-			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success  , "Candidate update succesfully");
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success,
+					"Candidate update succesfully");
 		} else {
-			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error , "Please select the valid file type");
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error,
+					"Please select the valid file type");
 		}
 	}
 
+	@Override
+	public Map<String, String> saveDocument(MultipartFile file, Integer request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public Map<String, String> saveDocument(MultipartFile file, Candidate candidateObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

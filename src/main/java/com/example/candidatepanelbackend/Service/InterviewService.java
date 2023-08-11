@@ -19,6 +19,7 @@ import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.Model.Employee;
 import com.example.candidatepanelbackend.Model.Interview;
 import com.example.candidatepanelbackend.Model.InterviewModel;
+import com.example.candidatepanelbackend.Model.InterviewRescheduledHistory;
 import com.example.candidatepanelbackend.Repo.InterviewRepo;
 import com.example.candidatepanelbackend.utils.ResponseBean;
 
@@ -33,12 +34,14 @@ public class InterviewService {
 	@Autowired
 	private CandidateService candidateService;
 	
-
 	@Autowired
 	private DocumentService documentService;
+	
 	@Autowired 
 	private EmployeeService employeeService;
 	
+	@Autowired
+	private InterviewRescheduledHistoryService interviewRescheduledHistoryService;
 
 	public ResponseBean addInterview(Interview interview, Long candidateId, Long employeeId) {
 		try {
@@ -82,7 +85,7 @@ public class InterviewService {
 				candidateModel.setPosition(interview.getCandidate().getPosition());
 				candidateModel.setEmail(interview.getCandidate().getEmail());
 				candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
-				
+				candidateModel.setId(interview.getCandidate().getId());
 				if (interview.getCandidate().getId() != null) {
 					DocumentDetilsModel documentDetails = documentService.getFile(interview.getCandidate().getId());
 					candidateModel.setDocumentDetails(documentDetails);
@@ -166,29 +169,52 @@ public class InterviewService {
 			Long employeeId) {
 		try {
 			Interview interview = getById(interviewId);
-			Integer conuter = interview.getInterviewCount();
-			if (conuter == null) {
-				conuter = 0;
-				conuter++;
-				interview.setInterviewCount(conuter);
-			} else {
-
-				conuter++;
-				interview.setInterviewCount(conuter);
-
-			}
+			boolean message = true;
 			Candidate candidate = candidateService.getByIdCandidate(candidateId);
 			interview.setCandidate(candidate);
 			Employee employee = employeeService.getByIdEmployee(employeeId);
 			interview.setEmployee(employee);
-			interview.setStatus(Constants.InterviewRescheduled);
 			
+			interview.setStatus(interviewget.getStatus());
+			interview.setFeedback(interviewget.getFeedback());
 			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
 			interview.setModifiedDate(new Date());
-			candidateService.updateStatusCandidateReschduleInerview(interview.getCandidate().getId(),true);
+			if (interviewget.getStatus().equals(Constants.InterviewSelected)) {
+				candidateService.updateStatusCandidateSelected(interview.getCandidate().getId(), true);
+				message = true;
+			}
+			if (interviewget.getStatus().equals(Constants.InterviewRejected)) {
+				candidateService.updateStatusCandidateSelected(interview.getCandidate().getId(), false);
+				interview.setDeleteFlag(Constants.Y);
+				message = true;
+			}
+			if (interviewget.getStatus().equals(Constants.InterviewRescheduled)) {
+				Integer conuter = interview.getInterviewCount();
+				if (conuter == null) {
+					conuter = 0;
+					conuter++;
+					interview.setInterviewCount(conuter);
+				} else {
+
+					conuter++;
+					interview.setInterviewCount(conuter);
+
+				}
+			}
 			final Interview interviewUpdate = interviewRepo.save(interview);
-			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
-					"Interview ReScheduled Successfully");
+			if(interviewUpdate.getStatus().equals(Constants.InterviewRescheduled)) {
+				candidateService.updateStatusCandidateReschduleInerview(interviewUpdate.getCandidate().getId(),true);
+				interviewRescheduledHistoryService.saveResuduleInterview(interviewUpdate);
+				message = false;
+			}
+			if (message) {
+				return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+						"Interview Schedule Update Successfully");
+			} else {
+				return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+						"Interview ReScheduled Successfully");
+			}
+			
 		} catch (Exception e) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
 

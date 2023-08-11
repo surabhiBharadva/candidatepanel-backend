@@ -14,7 +14,7 @@ import com.example.candidatepanelbackend.Model.Candidate;
 @Repository
 public interface CandidateRepo extends JpaRepository<Candidate,Long>{
 
-	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus='UnderScreening' or candidateStatus='InterviewScheduled' or candidateStatus='InterviewSelected' or candidateStatus='OfferAccepted' or candidateStatus='InterviewRejected' or candidateStatus='InterviewCancelled' or candidateStatus='InterviewResuchduled' order by applicationDate ASC")
+	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus='UnderScreening' or candidateStatus='InterviewScheduled' or candidateStatus='InterviewSelected' or candidateStatus='OfferAccepted' or candidateStatus='InterviewRejected' or candidateStatus='InterviewCancelled' or candidateStatus='InterviewRescheduled' order by applicationDate ASC")
 	List<Candidate> findCandidate();
 	
 	

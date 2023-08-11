@@ -14,13 +14,18 @@ import com.example.candidatepanelbackend.Model.Candidate;
 import com.example.candidatepanelbackend.Model.DocumentDetails;
 import com.example.candidatepanelbackend.Model.DocumentDetilsModel;
 import com.example.candidatepanelbackend.utils.ResponseBean;
+import com.example.candidatepanelbackend.Model.Employee;
 
 import jakarta.servlet.http.Part;
 
 public interface DocumentService {
 
 	Map<String, String> saveDocument(MultipartFile file,Candidate candidateObject);
+
+	Map<String, String> saveDocument(MultipartFile file, Employee employee);
 	
+	Map<String, String> saveDocument(MultipartFile file,Integer request);
+
 	Map<String, String> saveDocument(MultipartFile file);
 	
 	Object saveFile(MultipartFile file);

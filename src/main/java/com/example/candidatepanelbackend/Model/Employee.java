@@ -1,151 +1,80 @@
 package com.example.candidatepanelbackend.Model;
 
-
-
 import java.util.Date;
+import java.util.List;
 
-import com.example.candidatepanelbackend.Enum.EmployeeStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Employee {
-	
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Integer acardNum;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private Long phone;	
-	private Date joiningDate;
-	private String country;
-	private String state;
-	private String city;
-	private Date dob; 
-	private String adadharcard;
-	private String pancard;
-	private String marksheet;
-	private EmployeeStatus status;
-	private Date createDate;
+	private Long phoneNo;
+	private Long aadharCardNumber;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date dateofBirth;
+
+//	private String employeeStatus;
+
+	@Transient
+	private String documentType;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private OrganizationDetails organizationDetails;
+
+	@OneToMany(mappedBy = "empId", cascade = CascadeType.ALL)
+	private List<EducationDetails> educationDetails;
+
+	@OneToMany(mappedBy = "empId", cascade = CascadeType.ALL)
+	private List<WorkExperienceDetails> workExperienceDetails;
+
+	@OneToMany(mappedBy = "employeeId", cascade = CascadeType.ALL)
+	private List<Address> address;
+
+	@OneToMany(mappedBy = "employeeId", cascade = CascadeType.ALL)
+	private List<DocumentDetails> employeeDocuments;
+
+	private Date createdDate;
+	private String createdBy;
 	private Date modifiedDate;
-	private String address;
-	private String createBy;
 	private String modifiedBy;
+	private String deleteFlag;
 	
 
-	public EmployeeStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(EmployeeStatus status) {
-		this.status = status;
-	}
-
-	public String getAdadharcard() {
-		return adadharcard;
-	}
-
-	public void setAdadharcard(String adadharcard) {
-		this.adadharcard = adadharcard;
-	}
-
-	public String getPancard() {
-		return pancard;
-	}
-
-	public void setPancard(String pancard) {
-		this.pancard = pancard;
-	}
-
-	public String getMarksheet() {
-		return marksheet;
-	}
-
-	public void setMarksheet(String marksheet) {
-		this.marksheet = marksheet;
-	}
-
-	public Date getDob() {
-		return dob;
-	}
-
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
-	
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public Long getPhone() {
-		return phone;
-	}
-	public void setPhone(Long phone) {
-		this.phone = phone;
-	}
-	
 
-	public Integer getAcardNum() {
-		return acardNum;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public void setAcardNum(Integer acardNum) {
-		this.acardNum = acardNum;
-	}
-
-	
-
-	
 	public String getLastName() {
 		return lastName;
 	}
@@ -154,24 +83,106 @@ public class Employee {
 		this.lastName = lastName;
 	}
 
-	public Date getJoiningDate() {
-		return joiningDate;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setJoiningDate(Date joiningDate) {
-		this.joiningDate = joiningDate;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public Long getPhoneNo() {
+		return phoneNo;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
+	public void setPhoneNo(Long phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public Long getAadharCardNumber() {
+		return aadharCardNumber;
+	}
+
+	public void setAadharCardNumber(Long aadharCardNumber) {
+		this.aadharCardNumber = aadharCardNumber;
+	}
+
+	public Date getDateofBirth() {
+		return dateofBirth;
+	}
+
+	public void setDateofBirth(Date dateofBirth) {
+		this.dateofBirth = dateofBirth;
+	}
+
+//	public String getEmployeeStatus() {
+//		return employeeStatus;
+//	}
+//	public void setEmployeeStatus(String employeeStatus) {
+//		this.employeeStatus = employeeStatus;
+//	}
+	public List<WorkExperienceDetails> getWorkExperienceDetails() {
+		return workExperienceDetails;
+	}
+
+	public void setWorkExperienceDetails(List<WorkExperienceDetails> workExperienceDetails) {
+		this.workExperienceDetails = workExperienceDetails;
+	}
+
+	public List<EducationDetails> getEducationDetails() {
+		return educationDetails;
+	}
+
+	public void setEducationDetails(List<EducationDetails> educationDetails) {
+		this.educationDetails = educationDetails;
+	}
+
+	public OrganizationDetails getOrganizationDetails() {
+		return organizationDetails;
+	}
+
+	public void setOrganizationDetails(OrganizationDetails organizationDetails) {
+		this.organizationDetails = organizationDetails;
+	}
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
+
+	public List<DocumentDetails> getEmployeeDocuments() {
+		return employeeDocuments;
+	}
+
+	public void setEmployeeDocuments(List<DocumentDetails> employeeDocuments) {
+		this.employeeDocuments = employeeDocuments;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Date getModifiedDate() {
@@ -182,14 +193,6 @@ public class Employee {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getCreateBy() {
-		return createBy;
-	}
-
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
-	}
-
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
@@ -198,15 +201,23 @@ public class Employee {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getDeleteFlag() {
+		return deleteFlag;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDeleteFlag(String deleteFlag) {
+		this.deleteFlag = deleteFlag;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", phoneNo=" + phoneNo + ", aadharCardNumber=" + aadharCardNumber + ", dateofBirth=" + dateofBirth
+				+ ", organizationDetails=" + organizationDetails + ", educationDetails=" + educationDetails
+				+ ", workExperienceDetails=" + workExperienceDetails + ", address=" + address + ", employeeDocuments="
+				+ employeeDocuments + ", documentType=" + documentType + ", createdDate=" + createdDate + ", createdBy="
+				+ createdBy + ", modifiedDate=" + modifiedDate + ", modifiedBy=" + modifiedBy + ", deleteFlag="
+				+ deleteFlag + "]";
+	}
 
 }
