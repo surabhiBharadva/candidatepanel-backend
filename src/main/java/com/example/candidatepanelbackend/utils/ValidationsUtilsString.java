@@ -2,9 +2,9 @@ package com.example.candidatepanelbackend.utils;
 
 import java.util.Date;
 
+
 import org.springframework.stereotype.Component;
 
-import com.example.candidatepanelbackend.Enum.PositionEnum;
 
 @Component
 public class ValidationsUtilsString {

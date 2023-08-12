@@ -1,10 +1,11 @@
 package com.example.candidatepanelbackend.utils;
 
 import org.springframework.http.HttpStatus;
+
 import org.springframework.stereotype.Component;
 
-import com.example.candidatepanelbackend.Enum.ResponseStatus;
-import com.example.candidatepanelbackend.Model.Candidate;
+import com.example.candidatepanelbackend.constants.ResponseStatus;
+
 
 @Component
 public class ResponseBean {
