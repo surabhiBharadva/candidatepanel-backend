@@ -384,9 +384,54 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public Map<String, String> saveDocument(MultipartFile file, Candidate candidateObject) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, String> saveDocument(MultipartFile file, Candidate candidate) {
+		DocumentDetails entity = new DocumentDetails();
+
+		if (file == null) {
+			logger.error("File not Found...");
+		}
+
+		entity.setCandidateId(candidate);
+		entity.setFileName(file.getOriginalFilename());
+		try {
+			entity.setFileData(file.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		entity.setFileType(file.getContentType());
+		entity.setSize((double) (DataSize.ofBytes(file.getSize()).toMegabytes()));
+		
+		//entity.setDocumentType(candidate.getDocumentType());
+
+		try {
+			entity.setHash();
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(e.getMessage());
+		}
+
+		// StoreDocument
+		try {
+			storeDocument(file, entity.getHash());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+
+		entity.setModifiedDate(new Date());
+		entity.setCreatedDate(new Date());
+		entity.setCreatedBy(Constants.Admin);
+		entity.setModifiedBy(Constants.Admin);
+
+		// Save in DB
+		Map<String, String> response = new HashMap<>();
+		DocumentDetails save = repository.save(entity);
+
+		if (save.getId() != null) {
+			response.put("response", "Thank You For Applying to Nexscend Technologies");
+		} else {
+			response.put("response", "Please select the valid file type");
+		}
+
+		return response;
 	}
 
 }
