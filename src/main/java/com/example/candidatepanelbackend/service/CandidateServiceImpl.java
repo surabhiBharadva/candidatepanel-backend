@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.candidatepanelbackend.constants.Constants;
 import com.example.candidatepanelbackend.constants.ResponseStatus;
 import com.example.candidatepanelbackend.entity.Candidate;
+import com.example.candidatepanelbackend.entity.ConfigDataMaster;
+import com.example.candidatepanelbackend.entity.ConfigDataMasterValues;
 import com.example.candidatepanelbackend.entity.Interview;
 import com.example.candidatepanelbackend.repo.CandidateRepo;
 import com.example.candidatepanelbackend.responseModels.CandidateModel;
@@ -39,6 +41,9 @@ public class CandidateServiceImpl implements CandidateService{
 	
 	@Autowired
 	private InterviewService interviewService;
+	
+	@Autowired
+	private ConfigDataMasterValuesService configDataMasterValuesService;
 	
 	
 
@@ -102,7 +107,8 @@ public class CandidateServiceImpl implements CandidateService{
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
 			candidate.setPosition(l.getPosition());
-			candidate.setCandidateStatus(l.getCandidateStatus());
+			ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(l.getCandidateStatus(),Constants.CandidateStatus);
+			candidate.setCandidateStatus(configDataMaster.getConfigValue());
 			candidate.setSkills(l.getSkills());
 			candidate.setApplicationDate(l.getApplicationDate());
 			candidate.setJoiningAvailability(l.getJoiningAvailability());
@@ -113,6 +119,7 @@ public class CandidateServiceImpl implements CandidateService{
 		
 	}
 
+	
 	public ResponseBean updateCandidate(Long id, Candidate candidate, MultipartFile file) {
 		String error = validateCheck(candidate);
 		if(!error.isEmpty()) {
@@ -187,19 +194,7 @@ public class CandidateServiceImpl implements CandidateService{
 		}
 		return getList;
 	}
-
-	public void updateStatus(Long id) {
-		candidateRepo.updateStatus(id);
-		
-	}
-
-	public void updateStatusCandidateSelected(Long id, boolean update) {
-		if (update) {
-			candidateRepo.updateStatusCandidateSelected(id);
-		} else {
-			candidateRepo.updateStatusCandidateRejected(id);
-		}
-	}
+	
 
 	public CandidateModel getByIdCandidateWithDocumentDeitals(Long id) {
 		Candidate candidate = candidateRepo.findById(id).get();
@@ -229,10 +224,41 @@ public class CandidateServiceImpl implements CandidateService{
 		
 	}
 
-	public void updateStatusCandidateReschduleInerview(Long id, boolean update) {
+	
+
+	@Override
+	public CandidateModel getCadidateByIdView(Long id) {
 		
-		if (update) {
-			candidateRepo.updateStatusCandidateReschduleInerview(id);
+		Candidate candidate = candidateRepo.findById(id).get();
+		CandidateModel candidateModel = new CandidateModel();
+		candidateModel.setId(candidate.getId());
+		candidateModel.setFirstName(candidate.getFirstName());
+		candidateModel.setLastName(candidate.getLastName());
+		candidateModel.setPosition(candidate.getPosition());
+		candidateModel.setComment(candidate.getComment());
+		candidateModel.setJoiningAvailability(candidate.getJoiningAvailability());
+		candidateModel.setEmail(candidate.getEmail());
+		candidateModel.setPhoneNo(candidate.getPhoneNo());
+		ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(candidate.getCandidateStatus(),Constants.CandidateStatus);
+		candidateModel.setCandidateStatus(configDataMaster.getConfigValue());
+		candidateModel.setApplicationDate(candidate.getApplicationDate());
+		candidateModel.setPosition(candidate.getPosition());
+		candidateModel.setSkills(candidate.getSkills());
+		candidateModel.setCreatedDate(candidate.getCreatedDate());
+		candidateModel.setCreatedBy(candidate.getCreatedBy());
+		candidateModel.setModifiedBy(candidate.getModifiedBy());
+		candidateModel.setModifiedDate(candidate.getModifiedDate());
+		candidateModel.setJoiningDate(candidate.getJoiningDate());
+		if (candidate.getId() != null) {
+			DocumentDetilsModel documentDetails = documentService.getFile(candidate.getId());
+			candidateModel.setDocumentDetails(documentDetails);
 		}
+		return candidateModel;
+	}
+
+	@Override
+	public void updateStatusCandidate(Long id, String status) {
+		candidateRepo.updateStatusCandidate(id,status);
+		
 	}
 }

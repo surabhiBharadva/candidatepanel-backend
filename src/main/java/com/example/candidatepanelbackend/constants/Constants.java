@@ -16,5 +16,6 @@ public final class Constants {
 	public static String InterviewCancelled="InterviewCancelled";
 	public static String Admin = "Admin";
 	public static String Y = "Y";
-	
+	public static String CandidateStatus = "1"; 
+	public static String InterviewStatus = "2"; 
 }

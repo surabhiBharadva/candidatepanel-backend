@@ -36,7 +36,7 @@ public interface InterviewService {
 
 	InterviewModel getByIdInterView(Long id);
 
-	Interview getInterviewBycandidateId(Long candidateId);
+	ResponseBean getInterviewBycandidateId(Long candidateId);
 
 	List<InterviewModel> getAllInterviewList();
 
@@ -45,6 +45,8 @@ public interface InterviewService {
 	List<InterviewModel> getPreviousInterviewList();
 
 	Interview checkStatusSelected(Long id);
+
+	Interview getInterviewBycandidateIdView(Long candidateId);
 	
 	
 }

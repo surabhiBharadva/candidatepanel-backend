@@ -33,7 +33,7 @@ import com.example.candidatepanelbackend.responseModels.CandidateModel;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/")
 public class CandidateController {
 
 	@Autowired
@@ -99,5 +99,9 @@ public class CandidateController {
 		return documentService.getFile(fileName);
 
 	}
-
+	@GetMapping("/candidate/candidateview/{id}")
+	private ResponseEntity<CandidateModel> getCadidateByIdView(@PathVariable Long id) {
+		CandidateModel candidateSave = candidateService.getCadidateByIdView(id);
+		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
+	}
 }

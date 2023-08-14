@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.example.candidatepanelbackend.constants.Constants;
 import com.example.candidatepanelbackend.constants.ResponseStatus;
 import com.example.candidatepanelbackend.entity.Candidate;
+import com.example.candidatepanelbackend.entity.ConfigDataMasterValues;
 import com.example.candidatepanelbackend.entity.Employee;
 import com.example.candidatepanelbackend.entity.Interview;
+import com.example.candidatepanelbackend.entity.InterviewRescheduledHistory;
 import com.example.candidatepanelbackend.repo.InterviewRepo;
 import com.example.candidatepanelbackend.responseModels.CandidateModel;
 import com.example.candidatepanelbackend.responseModels.DocumentDetilsModel;
@@ -35,6 +37,9 @@ public class InterviewServiceImpl implements InterviewService{
 	
 	@Autowired
 	private InterviewRescheduledHistoryService interviewRescheduledHistoryService;
+	
+	@Autowired 
+	private ConfigDataMasterValuesService configDataMasterValuesService;
 
 	public ResponseBean addInterview(Interview interview, Long candidateId, Long employeeId) {
 		try {
@@ -48,7 +53,12 @@ public class InterviewServiceImpl implements InterviewService{
 			interview.setModifiedDate(new Date());
 			interview.setModifiedBy(Constants.Admin);
 			Interview interviewSet = interviewRepo.save(interview);
-			candidateService.updateStatus(candidate.getId());
+			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewSet.getStatus(),Constants.InterviewStatus);
+			if (configDataMasterValues != null) {
+				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewSet.getStatus());
+				
+			}
+			
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewSet,
 					"Interview Schedule Add Successfully");
 		} catch (Exception e) {
@@ -86,7 +96,8 @@ public class InterviewServiceImpl implements InterviewService{
 				interviewModel.setCandidate(candidateModel);
 			}
 				interviewModel.setModifiedBy(interview.getModifiedBy());
-				interviewModel.setStatus(interview.getStatus());
+				ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getStatus(),Constants.InterviewStatus);
+				interviewModel.setStatus(configDataMaster.getConfigValue());
 				interviewModel.setEmployee(interview.getEmployee());
 				interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
 				interviewModel.setId(interview.getId());
@@ -102,14 +113,7 @@ public class InterviewServiceImpl implements InterviewService{
 	public ResponseBean updateInterview(Long id, Interview interview) {
 		try {
 			Interview interviewSet = interviewRepo.findById(id).get();
-			if (interview.getStatus().equals(Constants.InterviewSelected)) {
-				candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(), true);
-			}
-			if (interview.getStatus().equals(Constants.InterviewRejected)) {
-				candidateService.updateStatusCandidateSelected(interviewSet.getCandidate().getId(), false);
-				interviewSet.setDeleteFlag(Constants.Y);
-				
-			}
+			
 			interviewSet.setModifiedDate(new Date());
 			interviewSet.setModifiedBy(Constants.Admin);
 		
@@ -153,9 +157,15 @@ public class InterviewServiceImpl implements InterviewService{
 		return interviewRepo.checkStatusSelected(cadidateId);
 	}
 
-	public Interview getInterviewBycandidateId(Long candidateId) {
+	public ResponseBean getInterviewBycandidateId(Long candidateId) {
+		
 		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
-		return interview;
+		if(interview.getId() != null) {
+		List<InterviewRescheduledHistory> list =  interviewRescheduledHistoryService.getInterviewbyId(interview.getId());
+		 return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interview,
+					"Interview Schedule Update Successfully" ,list);
+		}
+		return null;
 	}
 
 	public ResponseBean updateInterviewResuchdule(Interview interviewget, Long candidateId, Long interviewId,
@@ -172,15 +182,12 @@ public class InterviewServiceImpl implements InterviewService{
 			interview.setFeedback(interviewget.getFeedback());
 			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
 			interview.setModifiedDate(new Date());
-			if (interviewget.getStatus().equals(Constants.InterviewSelected)) {
-				candidateService.updateStatusCandidateSelected(interview.getCandidate().getId(), true);
+			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewget.getStatus(),Constants.InterviewStatus);
+			if (configDataMasterValues != null) {
+				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewget.getStatus());
 				message = true;
 			}
-			if (interviewget.getStatus().equals(Constants.InterviewRejected)) {
-				candidateService.updateStatusCandidateSelected(interview.getCandidate().getId(), false);
-				interview.setDeleteFlag(Constants.Y);
-				message = true;
-			}
+			
 			if (interviewget.getStatus().equals(Constants.InterviewRescheduled)) {
 				Integer conuter = interview.getInterviewCount();
 				if (conuter == null) {
@@ -194,20 +201,31 @@ public class InterviewServiceImpl implements InterviewService{
 
 				}
 			}
+			InterviewRescheduledHistory interviewRescheduledHistory = null;
 			final Interview interviewUpdate = interviewRepo.save(interview);
-			if(interviewUpdate.getStatus().equals(Constants.InterviewRescheduled)) {
-				candidateService.updateStatusCandidateReschduleInerview(interviewUpdate.getCandidate().getId(),true);
-				interviewRescheduledHistoryService.saveResuduleInterview(interviewUpdate);
+			if (interviewUpdate.getStatus().equals(Constants.InterviewRescheduled)) {
+
+				interviewRescheduledHistory	 = interviewRescheduledHistoryService
+						.saveResuduleInterview(interviewUpdate);
 				message = false;
 			}
 			if (message) {
 				return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
 						"Interview Schedule Update Successfully");
 			} else {
-				return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
-						"Interview ReScheduled Successfully");
+				if (interviewRescheduledHistory != null && interviewRescheduledHistory.getInterviewCount() != null) {
+					if (interviewRescheduledHistory.getInterviewCount() == 3) {
+						return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success,
+								interviewUpdate, "Interview " + interviewRescheduledHistory.getInterviewCount()
+										+ "ReScheduled Successfully");
+					}
+				} else {
+					return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+							"Interview ReScheduled Successfully");
+				}
+
 			}
-			
+			return null;
 		} catch (Exception e) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
 
@@ -230,6 +248,14 @@ public class InterviewServiceImpl implements InterviewService{
 		List<Interview> interviewList = interviewRepo.getPreviousInterviewList();
 		List<InterviewModel> interviewAdd = getInterviewDetils(interviewList);
 		return interviewAdd;
+	}
+
+	@Override
+	public Interview getInterviewBycandidateIdView(Long candidateId) {
+		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
+		ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getStatus(),Constants.InterviewStatus);
+		interview.setStatus(configDataMaster.getConfigValue());
+		return interview;
 	}
 
 }

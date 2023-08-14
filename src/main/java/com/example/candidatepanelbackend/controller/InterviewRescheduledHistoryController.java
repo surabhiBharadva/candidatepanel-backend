@@ -17,7 +17,7 @@ import com.example.candidatepanelbackend.service.InterviewRescheduledHistoryServ
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/")
 public class InterviewRescheduledHistoryController {
 	
 	@Autowired

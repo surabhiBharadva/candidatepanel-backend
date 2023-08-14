@@ -25,7 +25,7 @@ import com.example.candidatepanelbackend.utils.ResponseBean;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/")
 public class InterviewController {
 
 	@Autowired
@@ -89,9 +89,9 @@ public class InterviewController {
 	}
 
 	@GetMapping("/interviewGet/{candidateId}")
-	private ResponseEntity<Interview> getInterviewBycandidateId(@PathVariable Long candidateId) {
-		Interview interviewget = interviewService.getInterviewBycandidateId(candidateId);
-		return new ResponseEntity<>(interviewget, HttpStatus.CREATED);
+	private ResponseBean getInterviewBycandidateId(@PathVariable Long candidateId) {
+		return interviewService.getInterviewBycandidateId(candidateId);
+		
 	}
 	
 	@GetMapping("/interview/allInterviewList")
@@ -113,6 +113,12 @@ public class InterviewController {
 
 		List<InterviewModel> interview = interviewService.getPreviousInterviewList();
 		return new ResponseEntity<>(interview, HttpStatus.OK);
+	}
+	
+	@GetMapping("/interviewView/{candidateId}")
+	private ResponseEntity<Interview> getInterviewBycandidateIdView(@PathVariable Long candidateId) {
+		Interview interviewget = interviewService.getInterviewBycandidateIdView(candidateId);
+		return new ResponseEntity<>(interviewget, HttpStatus.CREATED);
 	}
 	
 	

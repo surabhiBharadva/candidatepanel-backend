@@ -27,11 +27,9 @@ public interface CandidateService {
 
 	Candidate getByIdCandidate(Long candidateId);
 
-	void updateStatus(Long id);
+	CandidateModel getCadidateByIdView(Long id);
 
-	void updateStatusCandidateSelected(Long id, boolean b);
-
-	void updateStatusCandidateReschduleInerview(Long id, boolean b);
+	void updateStatusCandidate(Long id, String status);
 	
 
 }

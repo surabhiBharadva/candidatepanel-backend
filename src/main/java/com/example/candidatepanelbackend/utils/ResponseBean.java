@@ -15,8 +15,16 @@ public class ResponseBean {
 	private String message;
 	private Object body;
 	private ResponseStatus status;
-
+	private Object body2;
 	
+	public Object getBody2() {
+		return body2;
+	}
+
+	public void setBody2(Object body2) {
+		this.body2 = body2;
+	}
+
 	public HttpStatus getHttpstatus() {
 		return httpstatus;
 	}
@@ -91,6 +99,15 @@ public class ResponseBean {
 		bean.setMessage(message);
 		bean.setStatus(status);
 		bean.setBody(body);
+		bean.setHttpstatus(httpStatus);
+		return bean;	
+	}
+	public static ResponseBean generateResponse(HttpStatus httpStatus,ResponseStatus status, Object body, String message,Object body2) {
+		ResponseBean bean = new ResponseBean();
+		bean.setMessage(message);
+		bean.setStatus(status);
+		bean.setBody(body);
+		bean.setBody2(body2);
 		bean.setHttpstatus(httpStatus);
 		return bean;	
 	}

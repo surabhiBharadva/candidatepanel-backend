@@ -17,7 +17,7 @@ public class InterviewRescheduledHistoryService {
 	@Autowired
 	private InterviewRescheduledHistoryRepo  interviewRescheduledHistoryRepo;
 
-	public void saveResuduleInterview(Interview interview) {
+	public InterviewRescheduledHistory saveResuduleInterview(Interview interview) {
 		InterviewRescheduledHistory interviewRescheduledHistory = new InterviewRescheduledHistory();
 		interviewRescheduledHistory.setCandidate(interview.getCandidate());
 		interviewRescheduledHistory.setInterviewId(interview.getId());
@@ -33,19 +33,13 @@ public class InterviewRescheduledHistoryService {
 				.getInterviewReseduledDetails(interview.getId());
 		if (interviewRescheduledHistoryList != null && !interviewRescheduledHistoryList.isEmpty()) {
 			for (InterviewRescheduledHistory interviewRescheduledHistoryObject : interviewRescheduledHistoryList) {
-				if (interviewRescheduledHistoryObject.getEmployee()
-						.equals(interviewRescheduledHistory.getEmployee())) {
+				if (interviewRescheduledHistoryObject.getEmployee().equals(interview.getEmployee())) {
 					Integer counter = interviewRescheduledHistoryObject.getInterviewCount();
-					if (counter == null) {
-						counter = 0;
-						counter++;
-						interviewRescheduledHistory.setInterviewCount(counter);
-					} else {
-						counter++;
-						interviewRescheduledHistory.setInterviewCount(counter);
-					}
 
-				}else {
+					counter++;
+					interviewRescheduledHistory.setInterviewCount(counter);
+
+				} else {
 					Integer counter = 0;
 					counter++;
 					interviewRescheduledHistory.setInterviewCount(counter);
@@ -56,8 +50,8 @@ public class InterviewRescheduledHistoryService {
 			counter++;
 			interviewRescheduledHistory.setInterviewCount(counter);
 		}
-
-		interviewRescheduledHistoryRepo.save(interviewRescheduledHistory);
+		 return interviewRescheduledHistoryRepo.save(interviewRescheduledHistory);
+ 
 
 	}
 
