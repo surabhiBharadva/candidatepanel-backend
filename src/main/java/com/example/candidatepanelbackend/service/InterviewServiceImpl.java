@@ -47,15 +47,15 @@ public class InterviewServiceImpl implements InterviewService{
 			interview.setCandidate(candidate);
 			Employee employee = employeeService.getByIdEmployee(employeeId);
 			interview.setEmployee(employee);
-			interview.setStatus(Constants.InterviewScheduled);
+			interview.setInterviewStatus(Constants.InterviewScheduled);
 			interview.setCreatedDate(new Date());
 			interview.setCreatedBy(Constants.Admin);
 			interview.setModifiedDate(new Date());
 			interview.setModifiedBy(Constants.Admin);
 			Interview interviewSet = interviewRepo.save(interview);
-			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewSet.getStatus(),Constants.InterviewStatus);
+			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewSet.getInterviewStatus(),Constants.InterviewStatus);
 			if (configDataMasterValues != null) {
-				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewSet.getStatus());
+				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewSet.getInterviewStatus());
 				
 			}
 			
@@ -85,7 +85,7 @@ public class InterviewServiceImpl implements InterviewService{
 				CandidateModel candidateModel = new CandidateModel(); 
 				candidateModel.setFirstName(interview.getCandidate().getFirstName());
 				candidateModel.setLastName(interview.getCandidate().getLastName());
-				candidateModel.setPosition(interview.getCandidate().getPosition());
+				candidateModel.setJobRequirement(interview.getCandidate().getJobRequirement());
 				candidateModel.setEmail(interview.getCandidate().getEmail());
 				candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
 				candidateModel.setId(interview.getCandidate().getId());
@@ -96,10 +96,12 @@ public class InterviewServiceImpl implements InterviewService{
 				interviewModel.setCandidate(candidateModel);
 			}
 				interviewModel.setModifiedBy(interview.getModifiedBy());
-				ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getStatus(),Constants.InterviewStatus);
-				interviewModel.setStatus(configDataMaster.getConfigValue());
+				ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getInterviewStatus(),Constants.InterviewStatus);
+				if(configDataMaster != null) {
+				interviewModel.setInterviewStatus(configDataMaster.getConfigValue());
+				}
 				interviewModel.setEmployee(interview.getEmployee());
-				interviewModel.setSchduleDateTime(interview.getSchduleDateTime());
+				interviewModel.setInterviewSlot(interview.getInterviewSlot());
 				interviewModel.setId(interview.getId());
 				
 				
@@ -117,7 +119,7 @@ public class InterviewServiceImpl implements InterviewService{
 			interviewSet.setModifiedDate(new Date());
 			interviewSet.setModifiedBy(Constants.Admin);
 		
-			interviewSet.setStatus(interview.getStatus());
+			interviewSet.setInterviewStatus(interview.getInterviewStatus());
 			interviewSet.setFeedback(interview.getFeedback());
 
 			final Interview interviewUpdate = interviewRepo.save(interviewSet);
@@ -138,11 +140,11 @@ public class InterviewServiceImpl implements InterviewService{
 		InterviewModel interviewModel = new InterviewModel();
 		candidateModel.setFirstName(interview.getCandidate().getFirstName());
 		candidateModel.setLastName(interview.getCandidate().getLastName());
-		candidateModel.setPosition(interview.getCandidate().getPosition());
+		candidateModel.setJobRequirement(interview.getCandidate().getJobRequirement());
 		candidateModel.setEmail(interview.getCandidate().getEmail());
 		candidateModel.setPhoneNo(interview.getCandidate().getPhoneNo());
 		interviewModel.setId(interview.getId());
-		interviewModel.setStatus(interview.getStatus());
+		interviewModel.setInterviewStatus(interview.getInterviewStatus());
 		interviewModel.setCandidate(candidateModel);
 		return interviewModel;
 	}
@@ -160,7 +162,7 @@ public class InterviewServiceImpl implements InterviewService{
 	public ResponseBean getInterviewBycandidateId(Long candidateId) {
 		
 		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
-		if(interview.getId() != null) {
+		if(interview != null && interview.getId() != null) {
 		List<InterviewRescheduledHistory> list =  interviewRescheduledHistoryService.getInterviewbyId(interview.getId());
 		 return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interview,
 					"Interview Schedule Update Successfully" ,list);
@@ -178,17 +180,17 @@ public class InterviewServiceImpl implements InterviewService{
 			Employee employee = employeeService.getByIdEmployee(employeeId);
 			interview.setEmployee(employee);
 			
-			interview.setStatus(interviewget.getStatus());
+			interview.setInterviewStatus(interviewget.getInterviewStatus());
 			interview.setFeedback(interviewget.getFeedback());
-			interview.setSchduleDateTime(interviewget.getSchduleDateTime());
+			interview.setInterviewSlot(interviewget.getInterviewSlot());
 			interview.setModifiedDate(new Date());
-			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewget.getStatus(),Constants.InterviewStatus);
+			ConfigDataMasterValues configDataMasterValues = configDataMasterValuesService.getValuebyKey(interviewget.getInterviewStatus(),Constants.InterviewStatus);
 			if (configDataMasterValues != null) {
-				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewget.getStatus());
+				candidateService.updateStatusCandidate(interview.getCandidate().getId(),interviewget.getInterviewStatus());
 				message = true;
 			}
 			
-			if (interviewget.getStatus().equals(Constants.InterviewRescheduled)) {
+			if (interviewget.getInterviewStatus().equals(Constants.InterviewRescheduled)) {
 				Integer conuter = interview.getInterviewCount();
 				if (conuter == null) {
 					conuter = 0;
@@ -203,7 +205,7 @@ public class InterviewServiceImpl implements InterviewService{
 			}
 			InterviewRescheduledHistory interviewRescheduledHistory = null;
 			final Interview interviewUpdate = interviewRepo.save(interview);
-			if (interviewUpdate.getStatus().equals(Constants.InterviewRescheduled)) {
+			if (interviewUpdate.getInterviewStatus().equals(Constants.InterviewRescheduled)) {
 
 				interviewRescheduledHistory	 = interviewRescheduledHistoryService
 						.saveResuduleInterview(interviewUpdate);
@@ -253,8 +255,8 @@ public class InterviewServiceImpl implements InterviewService{
 	@Override
 	public Interview getInterviewBycandidateIdView(Long candidateId) {
 		Interview interview = interviewRepo.getInterviewBycandidateId(candidateId);
-		ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getStatus(),Constants.InterviewStatus);
-		interview.setStatus(configDataMaster.getConfigValue());
+		ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(interview.getInterviewStatus(),Constants.InterviewStatus);
+		interview.setInterviewStatus(configDataMaster.getConfigValue());
 		return interview;
 	}
 

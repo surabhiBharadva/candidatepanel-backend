@@ -19,6 +19,7 @@ import com.example.candidatepanelbackend.repo.CandidateRepo;
 import com.example.candidatepanelbackend.responseModels.CandidateModel;
 import com.example.candidatepanelbackend.responseModels.DocumentDetilsModel;
 import com.example.candidatepanelbackend.responseModels.EmployeeModel;
+import com.example.candidatepanelbackend.utils.FirstLetterCapital;
 import com.example.candidatepanelbackend.utils.ResponseBean;
 import com.example.candidatepanelbackend.utils.ValidationsUtilsString;
 
@@ -35,11 +36,6 @@ public class CandidateServiceImpl implements CandidateService{
 	private EmployeeService employeeService;
 	
 	@Autowired
-	private ValidationsUtilsString validationUtils;
-	
-
-	
-	@Autowired
 	private InterviewService interviewService;
 	
 	@Autowired
@@ -53,6 +49,8 @@ public class CandidateServiceImpl implements CandidateService{
 		if(!error.isEmpty()) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Error,error);
 		}
+		candidate.setFirstName(FirstLetterCapital.capitalize(candidate.getFirstName()));
+		candidate.setLastName(FirstLetterCapital.capitalize(candidate.getLastName()));
 		candidate.setCandidateStatus(Constants.UnderScreening);
 		candidate.setCreatedDate(new Date());
 		candidate.setCreatedBy(Constants.Admin);
@@ -71,18 +69,18 @@ public class CandidateServiceImpl implements CandidateService{
 
 	private String validateCheck(Candidate candidate) {
 		String error = "";
-		Boolean value2 = validationUtils.checkVeladationString(candidate.getFirstName());
+		Boolean value2 = ValidationsUtilsString.checkVeladationString(candidate.getFirstName());
 		if (value2) {
 			error += "Candidate Name is missing," + " ";
 		}
-		if (validationUtils.checkVeladationString(candidate.getSkills())) {
+		if (ValidationsUtilsString.checkVeladationString(candidate.getSkills())) {
 			error += "Candidate Skills is missing," + " ";
 		}
 
-		if (validationUtils.checkVeladationLong(candidate.getPhoneNo())) {
+		if (ValidationsUtilsString.checkVeladationLong(candidate.getPhoneNo())) {
 			error += "Candidate Phone Number is missing," + " ";
 		}
-		Boolean value = validationUtils.checkVeladationString(candidate.getEmail());
+		Boolean value = ValidationsUtilsString.checkVeladationString(candidate.getEmail());
 		if (value) {
 			error += "Candidate Email is missing," + " ";
 		}
@@ -101,12 +99,12 @@ public class CandidateServiceImpl implements CandidateService{
 			}
 			candidate.setFirstName(l.getFirstName());
 			candidate.setLastName(l.getLastName());
-			candidate.setComment(l.getComment());
+			candidate.setComments(l.getComments());
 			candidate.setJoiningDate(l.getJoiningDate());
 			candidate.setPhoneNo(l.getPhoneNo());
 			candidate.setId(l.getId());
 			candidate.setEmail(l.getEmail());
-			candidate.setPosition(l.getPosition());
+			candidate.setJobRequirement(l.getJobRequirement());
 			ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(l.getCandidateStatus(),Constants.CandidateStatus);
 			candidate.setCandidateStatus(configDataMaster.getConfigValue());
 			candidate.setSkills(l.getSkills());
@@ -133,10 +131,10 @@ public class CandidateServiceImpl implements CandidateService{
 		candidateSet.setFirstName(candidate.getFirstName());
 		candidateSet.setLastName(candidate.getLastName());
 		candidateSet.setPhoneNo(candidate.getPhoneNo());
-		candidateSet.setComment(candidate.getComment());
+		candidateSet.setComments(candidate.getComments());
 		candidateSet.setJoiningDate(candidate.getJoiningDate());
 	
-		candidateSet.setPosition(candidate.getPosition());
+		candidateSet.setJobRequirement(candidate.getJobRequirement());
 		
 		candidateSet.setCandidateStatus(candidate.getCandidateStatus());
 		if(candidateSet.getCandidateStatus().equals(Constants.RejectedCancelled) || (candidateSet.getCandidateStatus().equals(Constants.OfferRejected))) {
@@ -202,14 +200,13 @@ public class CandidateServiceImpl implements CandidateService{
 		candidateModel.setId(candidate.getId());
 		candidateModel.setFirstName(candidate.getFirstName());
 		candidateModel.setLastName(candidate.getLastName());
-		candidateModel.setPosition(candidate.getPosition());
-		candidateModel.setComment(candidate.getComment());
+		candidateModel.setJobRequirement(candidate.getJobRequirement());
+		candidateModel.setComments(candidate.getComments());
 		candidateModel.setJoiningAvailability(candidate.getJoiningAvailability());
 		candidateModel.setEmail(candidate.getEmail());
 		candidateModel.setPhoneNo(candidate.getPhoneNo());
 		candidateModel.setCandidateStatus(candidate.getCandidateStatus());
 		candidateModel.setApplicationDate(candidate.getApplicationDate());
-		candidateModel.setPosition(candidate.getPosition());
 		candidateModel.setSkills(candidate.getSkills());
 		candidateModel.setCreatedDate(candidate.getCreatedDate());
 		candidateModel.setCreatedBy(candidate.getCreatedBy());
@@ -234,15 +231,14 @@ public class CandidateServiceImpl implements CandidateService{
 		candidateModel.setId(candidate.getId());
 		candidateModel.setFirstName(candidate.getFirstName());
 		candidateModel.setLastName(candidate.getLastName());
-		candidateModel.setPosition(candidate.getPosition());
-		candidateModel.setComment(candidate.getComment());
+		candidateModel.setJobRequirement(candidate.getJobRequirement());
+		candidateModel.setComments(candidate.getComments());
 		candidateModel.setJoiningAvailability(candidate.getJoiningAvailability());
 		candidateModel.setEmail(candidate.getEmail());
 		candidateModel.setPhoneNo(candidate.getPhoneNo());
 		ConfigDataMasterValues configDataMaster = configDataMasterValuesService.getValuebyKey(candidate.getCandidateStatus(),Constants.CandidateStatus);
 		candidateModel.setCandidateStatus(configDataMaster.getConfigValue());
 		candidateModel.setApplicationDate(candidate.getApplicationDate());
-		candidateModel.setPosition(candidate.getPosition());
 		candidateModel.setSkills(candidate.getSkills());
 		candidateModel.setCreatedDate(candidate.getCreatedDate());
 		candidateModel.setCreatedBy(candidate.getCreatedBy());

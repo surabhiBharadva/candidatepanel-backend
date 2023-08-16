@@ -14,13 +14,13 @@ public class CandidateModel {
 	private String firstName;
 
 	private String lastName;
-	private String position;
+	private String jobRequirement;
 	private String email;
 	private Long phoneNo;
 	private String skills;
 
 	private Date joiningDate;
-	private String comment;
+	private String comments;
 	private DocumentDetilsModel documentDetails;
 	private String candidateStatus;
 	
@@ -48,11 +48,12 @@ public class CandidateModel {
 		this.id = id;
 	}
 	
-	public String getPosition() {
-		return position;
+	
+	public String getJobRequirement() {
+		return jobRequirement;
 	}
-	public void setPosition(String position) {
-		this.position = position;
+	public void setJobRequirement(String jobRequirement) {
+		this.jobRequirement = jobRequirement;
 	}
 	public String getEmail() {
 		return email;
@@ -68,11 +69,11 @@ public class CandidateModel {
 		this.skills = skills;
 	}
 	
-	public String getComment() {
-		return comment;
+	public String getComments() {
+		return comments;
 	}
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	public DocumentDetilsModel getDocumentDetails() {
 		return documentDetails;

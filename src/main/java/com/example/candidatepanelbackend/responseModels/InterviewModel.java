@@ -16,22 +16,15 @@ public class InterviewModel {
 
 	private Long id;
 	
-	private LocalDateTime schduleDateTime;
+	private LocalDateTime interviewSlot;
 	
 	private Employee employee;
 	
-	private String status;
+	private String interviewStatus;
 	private String modifiedBy;
 	
 	private List<InterviewRescheduledHistory> interviewRescheduledHistory;
 	
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	private CandidateModel candidate;
 	
@@ -49,14 +42,6 @@ public class InterviewModel {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public LocalDateTime  getSchduleDateTime() {
-		return schduleDateTime;
-	}
-
-	public void setSchduleDateTime(LocalDateTime schduleDateTime) {
-		this.schduleDateTime = schduleDateTime;
 	}
 
 	public Employee getEmployee() {
@@ -81,6 +66,22 @@ public class InterviewModel {
 
 	public void setInterviewRescheduledHistory(List<InterviewRescheduledHistory> interviewRescheduledHistory) {
 		this.interviewRescheduledHistory = interviewRescheduledHistory;
+	}
+
+	public LocalDateTime getInterviewSlot() {
+		return interviewSlot;
+	}
+
+	public void setInterviewSlot(LocalDateTime interviewSlot) {
+		this.interviewSlot = interviewSlot;
+	}
+
+	public String getInterviewStatus() {
+		return interviewStatus;
+	}
+
+	public void setInterviewStatus(String interviewStatus) {
+		this.interviewStatus = interviewStatus;
 	}
 
 	

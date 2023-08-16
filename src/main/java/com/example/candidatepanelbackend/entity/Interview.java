@@ -29,9 +29,9 @@ public class Interview  {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private LocalDateTime schduleDateTime;
+	private LocalDateTime interviewSlot;
 		
-	private String status;
+	private String interviewStatus;
 
 	private String feedback;
 	
@@ -69,27 +69,28 @@ public class Interview  {
 		this.candidate = candidate;
 	}
 	
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public LocalDateTime  getSchduleDateTime() {
-		return schduleDateTime;
+	public LocalDateTime getInterviewSlot() {
+		return interviewSlot;
 	}
 
-	public void setSchduleDateTime(LocalDateTime schduleDateTime) {
-		this.schduleDateTime = schduleDateTime;
+	public void setInterviewSlot(LocalDateTime interviewSlot) {
+		this.interviewSlot = interviewSlot;
+	}
+
+	public String getInterviewStatus() {
+		return interviewStatus;
+	}
+
+	public void setInterviewStatus(String interviewStatus) {
+		this.interviewStatus = interviewStatus;
 	}
 
 	public String getFeedback() {

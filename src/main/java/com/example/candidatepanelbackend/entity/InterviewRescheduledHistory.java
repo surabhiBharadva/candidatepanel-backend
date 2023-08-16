@@ -27,9 +27,9 @@ public class InterviewRescheduledHistory {
 	
 	private Long interviewId;
 	
-	private LocalDateTime schduleDateTime;
+	private LocalDateTime interviewSlot;
 		
-	private String status;
+	private String interviewStatus;
 
 	private String feedback;
 	
@@ -87,17 +87,18 @@ public class InterviewRescheduledHistory {
 		this.deleteFlag = deleteFlag;
 	}
 	
-	public LocalDateTime getSchduleDateTime() {
-		return schduleDateTime;
+
+	public LocalDateTime getInterviewSlot() {
+		return interviewSlot;
 	}
-	public void setSchduleDateTime(LocalDateTime schduleDateTime) {
-		this.schduleDateTime = schduleDateTime;
+	public void setInterviewSlot(LocalDateTime interviewSlot) {
+		this.interviewSlot = interviewSlot;
 	}
-	public String getStatus() {
-		return status;
+	public String getInterviewStatus() {
+		return interviewStatus;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setInterviewStatus(String interviewStatus) {
+		this.interviewStatus = interviewStatus;
 	}
 	public String getFeedback() {
 		return feedback;

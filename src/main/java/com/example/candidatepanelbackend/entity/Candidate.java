@@ -28,7 +28,7 @@ public class Candidate  {
 	private String lastName;
 	
 	
-	private String position;
+	private String jobRequirement;
 	
 	private Date applicationDate;
 	private String email;
@@ -39,9 +39,7 @@ public class Candidate  {
 	private String candidateStatus; 
 	
 	private Date joiningDate;
-	private String comment;
-	
-	
+	private String comments;
 	
 	private String joiningAvailability;
 	
@@ -61,7 +59,7 @@ public class Candidate  {
 		this.id = id;
 	}
 	
-	@Column(nullable = false , unique = false)
+	
 	public String getEmail() {
 		return email;
 	}
@@ -69,7 +67,7 @@ public class Candidate  {
 		this.email = email;
 	}
 	
-	@Column(nullable = false, unique = false)
+	
 	public Long getPhoneNo() {
 		return phoneNo;
 	}
@@ -78,15 +76,15 @@ public class Candidate  {
 	}
 	
 
-	public String getComment() {
-		return comment;
+	
+	
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	
-	@Column(nullable = false)
 	public String getSkills() {
 		return skills;
 	}
@@ -98,17 +96,16 @@ public class Candidate  {
 	public String getCandidateStatus() {
 		return candidateStatus;
 	}
-	public String getPosition() {
-		return position;
+	
+	public String getJobRequirement() {
+		return jobRequirement;
 	}
-	public void setPosition(String position) {
-		this.position = position;
+	public void setJobRequirement(String jobRequirement) {
+		this.jobRequirement = jobRequirement;
 	}
 	public void setCandidateStatus(String candidateStatus) {
 		this.candidateStatus = candidateStatus;
 	}
-	
-
 	
 	public Date getModifiedDate() {
 		return modifiedDate;
@@ -116,9 +113,6 @@ public class Candidate  {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
-	
-	
 	
 	public Date getApplicationDate() {
 		return applicationDate;

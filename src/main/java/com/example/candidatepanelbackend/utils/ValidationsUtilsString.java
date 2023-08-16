@@ -7,21 +7,21 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class ValidationsUtilsString {
+public final class ValidationsUtilsString {
 	
-	 public Boolean checkVeladationString(String value) {  
+	public static Boolean checkVeladationString(String value) {  
 		 if(value.isEmpty() || value == null || value.trim().isEmpty()) {
 			 return true;
 		 }
 	        return false;
 	    }
-	 public boolean checkVeladationDate(Date value) {
+	public static boolean checkVeladationDate(Date value) {
 		 if(value == null) {
 			 return true;
 		 }
 	        return false;
 	 }
-	 public boolean checkVeladationLong(Long value) {
+	public static boolean checkVeladationLong(Long value) {
 		 if(value == null || value == 0) {
 			 return true;
 		 }

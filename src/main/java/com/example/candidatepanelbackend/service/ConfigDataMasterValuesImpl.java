@@ -25,6 +25,7 @@ public class ConfigDataMasterValuesImpl implements ConfigDataMasterValuesService
 	public ResponseBean getCandidateStatus() {
 		List<ConfigDataMasterValuesModel> list = new ArrayList<ConfigDataMasterValuesModel>();
 		List<ConfigDataMasterValues> candidateList = configDataMasterValuesRepo.findAll();
+		if(candidateList != null) {
 		for (ConfigDataMasterValues configDataMasterValues : candidateList) {
 			if (configDataMasterValues.getConfigDataMaster().getConfigCode().equals(Constants.CandidateStatus)) {
 				ConfigDataMasterValuesModel configDataMasterValuesModel = new ConfigDataMasterValuesModel();
@@ -33,6 +34,7 @@ public class ConfigDataMasterValuesImpl implements ConfigDataMasterValuesService
 				configDataMasterValuesModel.setConfigKey(configDataMasterValues.getConfigKey());
 				list.add(configDataMasterValuesModel);
 			}
+		}
 		}
 		return ResponseBean.generateResponse(HttpStatus.ACCEPTED,ResponseStatus.Success,list);
 	}
