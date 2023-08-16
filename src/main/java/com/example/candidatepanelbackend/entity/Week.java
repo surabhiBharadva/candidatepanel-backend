@@ -1,40 +1,74 @@
 package com.example.candidatepanelbackend.entity;
 
-
 import java.util.Date;
+
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "project")
-public class Project {
+@Table(name = "week")
+public class Week {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private String name;
+	private Date startDate;
+	private Date endDate;
+	private String status;
+	private Long totalHours;
+	
+	@OneToOne
+	@JoinColumn(name = "reportingPersonId")
+	private Employee reportingPersonId;
 	
 	private String createdBy;
 	private String modifiedBy;
 	private Date createdDate;
 	private Date modifiedDate;
 	
+	public Long getTotalHours() {
+		return totalHours;
+	}
+	public void setTotalHours(Long totalHours) {
+		this.totalHours = totalHours;
+	}
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public Date getStartDate() {
+		return startDate;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public Employee getReportingPersonId() {
+		return reportingPersonId;
+	}
+	public void setReportingPersonId(Employee reportingPersonId) {
+		this.reportingPersonId = reportingPersonId;
 	}
 	public String getCreatedBy() {
 		return createdBy;
@@ -62,8 +96,8 @@ public class Project {
 	}
 	@Override
 	public String toString() {
-		return "Project [id=" + id + ", name=" + name + ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
+		return "Week [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + ", status=" + status
+				+ ", reportingPersonId=" + reportingPersonId + ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
 				+ ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + "]";
 	}
-
 }

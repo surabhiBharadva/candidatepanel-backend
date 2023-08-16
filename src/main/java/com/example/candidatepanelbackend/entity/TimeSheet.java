@@ -1,4 +1,4 @@
-package com.example.candidatepanelbackend.entity;
+	package com.example.candidatepanelbackend.entity;
 
 
 import java.util.Date;
@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,18 +29,21 @@ public class TimeSheet {
 	
 	private Date date;
 	
-	private String employeeId;
+	private Long employeeId;
 	
+	@ManyToOne
+	private Week week;
 	
 	private String createdBy;
 	private String modifiedBy;
 	private Date createdDate;
 	private Date modifiedDate;
 	
-	public String getEmployeeId() {
+	
+	public Long getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getProjectName() {
@@ -96,11 +100,10 @@ public class TimeSheet {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
 	@Override
 	public String toString() {
 		return "TimeSheet [id=" + id + ", projectName=" + projectName + ", taskName=" + taskName + ", hours=" + hours
-				+ ", date=" + date + ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy + ", createdDate="
-				+ createdDate + ", modifiedDate=" + modifiedDate + "]";
+				+ ", date=" + date + ", employeeId=" + employeeId + ", createdBy=" + createdBy + ", modifiedBy="
+				+ modifiedBy + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + "]";
 	}
 }

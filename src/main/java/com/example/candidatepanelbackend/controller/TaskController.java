@@ -26,7 +26,7 @@ public class TaskController {
 	
 	@GetMapping("getTasks/{projectId}")
 	public ResponseBean getTasksByProjectId(@PathVariable Integer projectId) {
-		logger.info("Fetching All Products Details...");
+		logger.info("Fetching All Project Details...");
 		return taskService.getTaskByProjectId(projectId);
 	}
 }

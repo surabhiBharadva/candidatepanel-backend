@@ -2,7 +2,6 @@ package com.example.candidatepanelbackend.responseModels;
 
 import java.util.Date;
 
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +14,12 @@ public class TimeSheetModel {
 	private Integer task;
 	private Integer hours;
 	private Date date;
-	private String employeeId;
+	private Long employeeId;
 	
-	public String getEmployeeId() {
+	public Long getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
 	public Integer getId() {

@@ -23,9 +23,9 @@ public class ProjectController {
 	@Autowired
 	private ProjectService candidateService;
 	
-	@GetMapping("getProduct")
-	public ResponseBean getAllCandidateData() {
-		logger.info("Fetching All Products Details...");
+	@GetMapping("getProject")
+	public ResponseBean getAllProjects() {
+		logger.info("Fetching All Project Details...");
 		return candidateService.getProduct();
 	}
 }

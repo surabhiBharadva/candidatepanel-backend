@@ -2,7 +2,6 @@ package com.example.candidatepanelbackend.responseModels;
 
 
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.stereotype.Component;
 
 @Component

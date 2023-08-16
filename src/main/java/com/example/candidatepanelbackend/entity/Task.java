@@ -26,8 +26,8 @@ public class Task {
     @JoinColumn(name = "projectId")
     private Project project;
 	
-	private Integer createdBy;
-	private Integer modifiedBy;
+	private String createdBy;
+	private String modifiedBy;
 	private Date createdDate;
 	private Date modifiedDate;
 	
@@ -43,16 +43,16 @@ public class Task {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getCreatedBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
-	public void setCreatedBy(Integer createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public Integer getModifiedBy() {
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
-	public void setModifiedBy(Integer modifiedBy) {
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 	public Date getCreatedDate() {

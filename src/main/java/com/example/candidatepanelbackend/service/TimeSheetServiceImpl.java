@@ -29,7 +29,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 	@Autowired
 	private TaskService taskService;
-
+	
 	@Override
 	public ResponseBean addOrUpdate(TimeSheetModel request, Integer id) {
 
@@ -84,7 +84,11 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 		timeSheet.setDate(request.getDate());
 		timeSheet.setHours(request.getHours());
-		timeSheet.setEmployeeId(request.getEmployeeId());
+		if(request.getEmployeeId() != null) {
+			timeSheet.setEmployeeId(request.getEmployeeId());
+		} else {
+			timeSheet.setEmployeeId(1L);
+		}
 		
 		timeSheet.setCreatedBy(Constants.Admin);
 		timeSheet.setModifiedBy(Constants.Admin);
@@ -111,13 +115,18 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 	@Override
 	public ResponseBean getLastSyncDate(Integer employeeId) {
-//		List<TimeSheet> timeSheet = timeSheetRepository.findByEmployeeId(employeeId);
+		List<TimeSheet> timeSheet = timeSheetRepository.findByEmployeeId(employeeId);
 
-//		if (timeSheet != null) {
-//			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, timeSheet.get(0).getDate());
-//		}
-//		return ResponseBean.generateResponse(HttpStatus.BAD_REQUEST, ResponseStatus.Error, null);
-	return null;
+		if (timeSheet != null) {
+			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, timeSheet.get(0).getDate());
+		}
+		return ResponseBean.generateResponse(HttpStatus.BAD_REQUEST, ResponseStatus.Error, null);
+	}
+
+	@Override
+	public List<TimeSheet> getHourOfWeek(Long employeeId, String startDate, String endDate) {
+		List<TimeSheet> hourOfWeek = timeSheetRepository.getHourOfWeek(employeeId, startDate, endDate);
+		return hourOfWeek;
 	}
 
 }

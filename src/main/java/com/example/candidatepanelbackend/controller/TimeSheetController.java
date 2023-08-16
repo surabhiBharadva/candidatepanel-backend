@@ -1,7 +1,6 @@
 package com.example.candidatepanelbackend.controller;
 
 import java.util.List;
-
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -14,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.candidatepanelbackend.constants.ResponseStatus;
+import com.example.candidatepanelbackend.entity.TimeSheet;
 import com.example.candidatepanelbackend.responseModels.TimeSheetModel;
 import com.example.candidatepanelbackend.service.TimeSheetService;
 import com.example.candidatepanelbackend.utils.ResponseBean;
@@ -31,13 +32,11 @@ public class TimeSheetController {
 	@Autowired
 	private TimeSheetService timeSheetService;
 
-	@PostMapping("addOrUpdate")
+	@PostMapping("add-or-update")
 	ResponseBean addOrUpdate(@RequestBody List<TimeSheetModel> timeSheetModels) {
 
 		List<TimeSheetModel> nonEmptyItems = timeSheetModels.stream().filter(item -> item.getHours() != null)
 				.collect(Collectors.toList());
-
-		System.out.println(nonEmptyItems);
 
 		nonEmptyItems.forEach(item -> {
 			if (item.getId() != null) {
@@ -48,13 +47,21 @@ public class TimeSheetController {
 			}
 		});
 
-		return ResponseBean.generateResponse(HttpStatus.CREATED, ResponseStatus.Success, "Time Sheet updated Succesfully");
+		return ResponseBean.generateResponse(HttpStatus.CREATED, ResponseStatus.Success,
+				"Time Sheet updated Succesfully");
 	}
-	
-//	@GetMapping("getLastSyncDate/{employeeId}")
-//	public ResponseBean getLastSyncDate(@PathVariable Integer employeeId) {
-//		logger.info("Fetching last Sync Date Details...");
-//		return timeSheetService.getLastSyncDate(employeeId);
-//	}
 
+	@GetMapping("get-last-sync-date/{employeeId}")
+	public ResponseBean getLastSyncDate(@PathVariable Integer employeeId) {
+		logger.info("Fetching last Sync Date Details...");
+		return timeSheetService.getLastSyncDate(employeeId);
+	}
+
+	@GetMapping("get-week-hours/{employeeId}")
+	public ResponseBean getWeekHours(@PathVariable Long employeeId ,@RequestParam String startDate,
+			@RequestParam String endDate) {
+		
+		List<TimeSheet> hourOfWeek = timeSheetService.getHourOfWeek(employeeId,startDate,endDate);
+		return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, hourOfWeek);
+	}
 }
