@@ -1,9 +1,11 @@
 package com.example.candidatepanelbackend.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,20 +38,25 @@ public class InterviewRescheduledHistoryService {
 		interviewRescheduledHistory.setInterviewStatus(interview.getInterviewStatus());
 		List<InterviewRescheduledHistory> interviewRescheduledHistoryList = interviewRescheduledHistoryRepo
 				.getInterviewReseduledDetails(interview.getId());
-		if (interviewRescheduledHistoryList != null && !interviewRescheduledHistoryList.isEmpty()) {
-			for (InterviewRescheduledHistory interviewRescheduledHistoryObject : interviewRescheduledHistoryList) {
-				if (interviewRescheduledHistoryObject.getEmployee().equals(interview.getEmployee())) {
-					Integer counter = interviewRescheduledHistoryObject.getInterviewCount();
+		if (!interviewRescheduledHistoryList.isEmpty() && interviewRescheduledHistoryList != null) {
+			List<InterviewRescheduledHistory> result = interviewRescheduledHistoryList.stream()
+					.filter(person -> person.getEmployee().getId().equals(interview.getEmployee().getId()))
+					.collect(Collectors.toList());
+			if (result != null && !result.isEmpty()) {
+				InterviewRescheduledHistory interviewRescheduledHistoryObject = result.get(result.size() - 1);
+				Integer counter = interviewRescheduledHistoryObject.getInterviewCount();
 
-					counter++;
-					interviewRescheduledHistory.setInterviewCount(counter);
+				counter++;
+				interviewRescheduledHistory.setInterviewCount(counter);
 
-				}
+			}else {
+				interviewRescheduledHistory.setInterviewCount(1);
 			}
 		} else {
-			
 			interviewRescheduledHistory.setInterviewCount(1);
 		}
+		
+		
 		 return interviewRescheduledHistoryRepo.save(interviewRescheduledHistory);
  
 

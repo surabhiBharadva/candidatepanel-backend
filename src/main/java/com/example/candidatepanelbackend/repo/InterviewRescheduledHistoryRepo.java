@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.example.candidatepanelbackend.entity.Employee;
 import com.example.candidatepanelbackend.entity.InterviewRescheduledHistory;
 
 
@@ -18,5 +19,6 @@ public interface InterviewRescheduledHistoryRepo extends JpaRepository<Interview
 
 	@Query(nativeQuery = true, value = "SELECT * FROM interviewrescheduledhistory WHERE interviewId =:interviewId")
 	public List<InterviewRescheduledHistory> getInterviewReseduledDetails(Long interviewId);
+
 
 }

@@ -220,18 +220,22 @@ public class InterviewServiceImpl implements InterviewService{
 						return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success,
 								interviewUpdate, "Interview " + interviewRescheduledHistory.getInterviewCount()
 										+ "ReScheduled Successfully");
+					}else {
+						return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
+								"Interview ReScheduled Successfully");
 					}
 				} else {
 					return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Success, interviewUpdate,
 							"Interview ReScheduled Successfully");
 				}
-
+				
 			}
-			return null;
+		
 		} catch (Exception e) {
 			return ResponseBean.generateResponse(HttpStatus.ACCEPTED, ResponseStatus.Error, "Something went to wrong");
 
 		}
+		
 	}
 
 	public List<InterviewModel> getAllInterviewList() {
