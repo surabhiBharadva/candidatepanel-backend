@@ -225,7 +225,7 @@ public class EmployeeModel {
 			addr.setPinCode(addrs.getPinCode());
 			addr.setAddressType(addrs.getAddressType());
 			
-			addr.setEmployeeId(emp);
+			addr.setEmpId(emp);
 			addr.setCreatedBy(Constants.Admin);
 			addr.setCreatedDate(new Date());
 			addr.setModifiedBy(Constants.Admin);

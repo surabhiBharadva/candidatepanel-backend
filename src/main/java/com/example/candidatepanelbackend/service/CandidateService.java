@@ -30,6 +30,8 @@ public interface CandidateService {
 	CandidateModel getCadidateByIdView(Long id);
 
 	void updateStatusCandidate(Long id, String status);
+
+	List<CandidateModel> getStatusList(String status);
 	
 
 }

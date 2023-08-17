@@ -33,9 +33,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		e.setDateofBirth(employeeRequest.getDateofBirth());
 		e.setPhoneNo(employeeRequest.getPhoneNo());
 		e.setAadharCardNumber(employeeRequest.getAadharCardNumber());
-				
+		if(employeeRequest.getOrganizationDetails() != null) {
 		e.setOrganizationDetails(employeeRequest.addOrganizationDetails(employeeRequest, e));
-		
+		}
 //		Arrays.asList(employeeRequest.addEducationDetails(employeeRequest ,e)).stream().forEach(eachEducation ->{
 //			e.setEducationDetails(employeeRequest.getEducationDetails());
 //		});
@@ -47,11 +47,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 //		Arrays.asList(employeeRequest.addAddressDetails(employeeRequest, e)).stream().forEach(eachAddress ->{
 //			e.setAddress(employeeRequest.getAddress());
 //		});
-		
+		if(employeeRequest.getEducationDetails() != null) {
 		e.setEducationDetails(employeeRequest.addEducationDetails(employeeRequest, e));
+		}
+		if(employeeRequest.getWorkExperienceDetails() != null) {
 		e.setWorkExperienceDetails(employeeRequest.addWorkExperienceDetails(employeeRequest, e));
+		}
+		if(employeeRequest.getAddress()  != null) {
 		e.setAddress(employeeRequest.addAddressDetails(employeeRequest, e));
-		
+		}
 		e.setCreatedBy(Constants.Admin);	//*
 		e.setCreatedDate(new Date()); 		
 		e.setModifiedBy(Constants.Admin);  //*

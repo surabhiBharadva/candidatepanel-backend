@@ -47,7 +47,8 @@ public class CandidateController {
 
 	@PostMapping("/candidate")
 	private ResponseBean saveCandidate(@RequestParam("candidate") String candidate,
-			@RequestParam("file") MultipartFile file) throws JsonMappingException, JsonProcessingException {
+			@RequestParam(value = "file", required = false) MultipartFile file)
+			throws JsonMappingException, JsonProcessingException {
 		Candidate candidateObject = mapper.readValue(candidate, Candidate.class);
 		try {
 			if (candidateObject.getId() != null) {
@@ -103,5 +104,11 @@ public class CandidateController {
 	private ResponseEntity<CandidateModel> getCadidateByIdView(@PathVariable Long id) {
 		CandidateModel candidateSave = candidateService.getCadidateByIdView(id);
 		return new ResponseEntity<>(candidateSave, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/candidate/candidateStatus/{status}")
+	private ResponseEntity<List<CandidateModel>> getStatusList(@PathVariable("status") String status) {
+		List<CandidateModel> candidateList = candidateService.getStatusList(status);
+		return new ResponseEntity<>(candidateList, HttpStatus.OK);
 	}
 }

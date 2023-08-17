@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.candidatepanelbackend.entity.Candidate;
+import com.example.candidatepanelbackend.responseModels.CandidateModel;
 
 
 
@@ -29,6 +30,9 @@ public interface CandidateRepo extends JpaRepository<Candidate,Long>{
     @Transactional 
 	@Query(nativeQuery = true, value = "UPDATE candidate SET candidateStatus =:candidateStatus WHERE id =:candidateId")
 	void updateStatusCandidate(Long candidateId,@Param("candidateStatus") String candidateStatus);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM candidate WHERE candidateStatus=:candidateStatus order by applicationDate ASC")
+	List<Candidate> getStatusList(@Param("candidateStatus") String candidateStatus);
 	
 
 

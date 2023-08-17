@@ -37,7 +37,7 @@ public class Employee {
 	@Transient
 	private String documentType;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "employee")
 	private OrganizationDetails organizationDetails;
 
 	@OneToMany(mappedBy = "empId", cascade = CascadeType.ALL)
@@ -46,7 +46,7 @@ public class Employee {
 	@OneToMany(mappedBy = "empId", cascade = CascadeType.ALL)
 	private List<WorkExperienceDetails> workExperienceDetails;
 
-	@OneToMany(mappedBy = "employeeId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "empId", cascade = CascadeType.ALL)
 	private List<Address> address;
 
 	@OneToMany(mappedBy = "employeeId", cascade = CascadeType.ALL)

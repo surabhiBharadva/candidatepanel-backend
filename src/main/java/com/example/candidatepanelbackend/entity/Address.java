@@ -29,8 +29,8 @@ public class Address {
 	private String addressType;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "employeeId")
-	private Employee employeeId;
+	@JoinColumn(name = "empId")
+	private Employee empId;
 
 	private Date createdDate;
 	private String createdBy;
@@ -94,12 +94,12 @@ public class Address {
 		this.addressType = addressType;
 	}
 
-	public Employee getEmployeeId() {
-		return employeeId;
+	public Employee getEmpId() {
+		return empId;
 	}
 
-	public void setEmployeeId(Employee employeeId) {
-		this.employeeId = employeeId;
+	public void setEmpId(Employee empId) {
+		this.empId = empId;
 	}
 
 	public Date getCreatedDate() {
@@ -145,9 +145,9 @@ public class Address {
 	@Override
 	public String toString() {
 		return "Address [id=" + id + ", streetLine1=" + streetLine1 + ", streetLine2=" + streetLine2 + ", city=" + city
-				+ ", state=" + state + ", pinCode=" + pinCode + ", addressType=" + addressType + ", employeeId="
-				+ employeeId + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", modifiedDate="
-				+ modifiedDate + ", modifiedBy=" + modifiedBy + ", deleteFlag=" + deleteFlag + "]";
+				+ ", state=" + state + ", pinCode=" + pinCode + ", addressType=" + addressType + ", empId=" + empId
+				+ ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", modifiedDate=" + modifiedDate
+				+ ", modifiedBy=" + modifiedBy + ", deleteFlag=" + deleteFlag + "]";
 	}
 
 }

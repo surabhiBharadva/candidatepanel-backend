@@ -90,6 +90,13 @@ public class CandidateServiceImpl implements CandidateService{
 	public List<CandidateModel> getCandidate() {
 		//List<Candidate> list = candidateRepo.findAll();
 		List<Candidate> list = candidateRepo.findCandidate();
+		List<CandidateModel> getList = this.getCandidateList(list);
+		
+
+		return getList;
+		
+	}
+	public List<CandidateModel> getCandidateList(List<Candidate> list) {
 		List<CandidateModel> getList = new ArrayList<CandidateModel>();
 		for (Candidate l : list) {
 			CandidateModel candidate = new CandidateModel();
@@ -112,11 +119,8 @@ public class CandidateServiceImpl implements CandidateService{
 			candidate.setJoiningAvailability(l.getJoiningAvailability());
 			getList.add(candidate);
 		}
-
 		return getList;
-		
 	}
-
 	
 	public ResponseBean updateCandidate(Long id, Candidate candidate, MultipartFile file) {
 		String error = validateCheck(candidate);
@@ -147,12 +151,6 @@ public class CandidateServiceImpl implements CandidateService{
 				EmployeeModel  employee = new EmployeeModel();
 				employee.setFirstName(candidate.getFirstName());
 				employee.setLastName(candidate.getLastName());
-				/*
-				 * employee.setJoiningDate(candidate.getJoiningDate());
-				 * employee.setCreatedDate(new Date()); employee.setCreatedBy(Constants.Admin);
-				 * employee.setModifiedDate(new Date());
-				 * employee.setModifiedBy(Constants.Admin);
-				 */
 				employee.setPhoneNo(candidate.getPhoneNo());
 				employee.setEmail(candidate.getEmail());
 				employeeService.addEmployee(employee, null);
@@ -256,5 +254,13 @@ public class CandidateServiceImpl implements CandidateService{
 	public void updateStatusCandidate(Long id, String status) {
 		candidateRepo.updateStatusCandidate(id,status);
 		
+	}
+
+	@Override
+	public List<CandidateModel> getStatusList(String status) {
+		List<Candidate> list = candidateRepo.getStatusList(status);
+		List<CandidateModel> getList = this.getCandidateList(list);
+
+		return getList;
 	}
 }

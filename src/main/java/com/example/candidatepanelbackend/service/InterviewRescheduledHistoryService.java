@@ -44,16 +44,11 @@ public class InterviewRescheduledHistoryService {
 					counter++;
 					interviewRescheduledHistory.setInterviewCount(counter);
 
-				} else {
-					Integer counter = 0;
-					counter++;
-					interviewRescheduledHistory.setInterviewCount(counter);
 				}
 			}
 		} else {
-			Integer counter = 0;
-			counter++;
-			interviewRescheduledHistory.setInterviewCount(counter);
+			
+			interviewRescheduledHistory.setInterviewCount(1);
 		}
 		 return interviewRescheduledHistoryRepo.save(interviewRescheduledHistory);
  

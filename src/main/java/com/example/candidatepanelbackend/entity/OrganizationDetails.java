@@ -38,7 +38,7 @@ public class OrganizationDetails {
 	private String modifiedBy;
 	private String deleteFlag;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "empId")
 	private Employee employee;
 
